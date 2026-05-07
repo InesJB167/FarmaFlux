@@ -1,6 +1,6 @@
 # 🏥 Sistema de Gestão de Farmácia - FarmaFlux
 
-Sistema Fullstack de Gestão de Farmácia desenvolvido para controle de inventário, vendas, lotes, utilizadores e auditoria, utilizando tecnologias modernas para frontend e backend.
+Sistema de Gestão de Farmácia desenvolvido para controle de inventário, vendas, lotes, utilizadores e auditoria, utilizando tecnologias modernas para frontend e backend.
 
 ---
 
