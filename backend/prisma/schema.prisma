@@ -5,11 +5,203 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model categorias {
+  id           Int            @id @default(autoincrement())
+  nome         String         @unique @db.VarChar(100)
+  descricao    String?        @db.Text
+  deleted_at   DateTime?
+  created_at   DateTime       @default(now())
+  medicamentos medicamentos[]
+}
+
+model localizacoes {
+  id           Int            @id @default(autoincrement())
+  zona         String         @db.VarChar(100)
+  estante      String         @db.VarChar(50)
+  nivel        String         @db.VarChar(50)
+  descricao    String?        @db.VarChar(200)
+  medicamentos medicamentos[]
+}
+
+model medicamentos {
+  id              Int       @id @default(autoincrement())
+  nome            String    @db.VarChar(100)
+  principio_ativo String?
+  dosagem         String?
+  preco_venda     Decimal   @db.Decimal(15, 2)
+  stock_minimo    Int
+  deleted_at      DateTime?
+
+  // Foreign Keys
+  categoria_id   Int
+  localizacao_id Int
+
+  // Relações
+  categoria   categorias   @relation(fields: [categoria_id], references: [id])
+  localizacao localizacoes @relation(fields: [localizacao_id], references: [id])
+
+  barcodes barcodes[]
+  lotes    lotes[]
+}
+
+model barcodes {
+  id             Int    @id @default(autoincrement())
+  medicamento_id Int
+  codigo         String @unique
+
+  // Relações
+  medicamentos medicamentos @relation(fields: [medicamento_id], references: [id])
+}
+
+model fornecedores {
+  id           Int      @id @default(autoincrement())
+  nome_empresa String   @db.VarChar(150)
+  nif          String   @unique @db.VarChar(20)
+  contacto     String   @db.VarChar(50)
+  endereco     String   @db.VarChar(200)
+  created_at   DateTime @default(now())
+
+  lotes lotes[]
+}
+
+model lotes {
+  id Int @id @default(autoincrement())
+
+  // Foreign Keys
+  medicamento_id Int
+  fornecedor_id  Int
+
+  numero_lote    String
+  data_validade  DateTime
+  qtd_inicial    Int
+  qtd_atual      Int
+  preco_custo    Decimal  @db.Decimal(15, 2)
+  nif_fornecedor String   @unique @db.VarChar(20)
+  data_entrada   DateTime @default(now())
+  created_at     DateTime @default(now())
+
+  // Relações
+  fornecedor  fornecedores @relation(fields: [fornecedor_id], references: [id])
+  medicamento medicamentos @relation(fields: [medicamento_id], references: [id])
+
+  itens_venda itens_venda[]
+}
+
+enum Role {
+  ADMIN
+  GERENTE
+  OPERADOR
+}
+
+model utilizadores {
+  id            Int       @id @default(autoincrement())
+  nome          String    @db.VarChar(100)
+  username      String    @unique @db.VarChar(50)
+  password_hash String    @db.VarChar(255)
+  role          Role      @default(OPERADOR)
+  ativo         Boolean   @default(true)
+  created_at    DateTime  @default(now())
+  deleted_at    DateTime?
+  updated_at    DateTime  @updatedAt
+
+  vendas         vendas[]
+  logs_auditoria logs_auditoria[]
+}
+
+enum Status {
+  DRAFT
+  PARKED
+  COMPLETED
+  CANCELLED
+}
+
+model vendas {
+  id Int @id @default(autoincrement())
+
+  //Foreign Keys
+  utilizador_id Int
+
+  data_hora      DateTime @default(now())
+  total_bruto    Decimal  @db.Decimal(15, 2)
+  total_desconto Decimal  @db.Decimal(15, 2)
+  status         Status   @default(COMPLETED)
+  created_at     DateTime @default(now())
+
+  //Relações
+  utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
+
+  itens_venda itens_venda[]
+  pagamentos  pagamentos[]
+}
+
+model itens_venda {
+  id Int @id @default(autoincrement())
+
+  //Foreign Keys
+  venda_id Int
+  lote_id  Int
+
+  quantidade     Int
+  preco_unitario Decimal @db.Decimal(15, 2)
+
+  //Relações
+  venda vendas @relation(fields: [venda_id], references: [id])
+  lote  lotes  @relation(fields: [lote_id], references: [id])
+}
+
+enum Metodo {
+  DINHEIRO
+  TPA
+  TRANSFERENCIA
+}
+
+model pagamentos {
+  id Int @id @default(autoincrement())
+
+  //Foreign Keys
+  venda_id Int
+
+  metodo            Metodo   @default(DINHEIRO)
+  valor_pago        Decimal  @db.Decimal(15, 2)
+  troco             Decimal  @db.Decimal(15, 2)
+  referencia_manual String?  @db.VarChar(100)
+  created_at        DateTime @default(now())
+
+  //Relações
+  venda vendas @relation(fields: [venda_id], references: [id])
+}
+
+enum Acao {
+  CREATE
+  UPDATE
+  DELETE
+  CANCELAR_VENDA
+  AJUSTE_STOCK
+  ALTERAR_PRECO
+  ALTERAR_ROLE
+}
+
+model logs_auditoria {
+  id Int @id @default(autoincrement())
+
+  //Foreign Keys
+  utilizador_id Int
+
+  acao         Acao     @default(UPDATE)
+  tabela       String
+  id_registro  Int
+  valor_antigo Json? //deve vir em json pra evitar erros 
+  valor_novo   Json?
+  timestamp    DateTime @default(now())
+
+  //Relações
+  utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
 }
