@@ -3,9 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "type": "module",
+  "prisma":{
+      "seed": "node prisma/seed.js"
   },
+  "scripts": {
+  "dev": "nodemon server.js",
+  "start": "node server.js",
+  "seed": "npx prisma db seed",
+  "test": "echo \"Error: no test specified\" && exit 1"
+
+  
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

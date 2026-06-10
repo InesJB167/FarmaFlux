@@ -1,9 +1,9 @@
 //allowed to use the environment variables
-import dontev from "dotenv";
-dontev.config()
+import dotenv from "dotenv";
+dotenv.config()
 
 import app from "./app.js";
-import prisma from "./prisma/prima.js";
+import prisma from "./prisma/prisma.js";
 
 async function server() {
     
