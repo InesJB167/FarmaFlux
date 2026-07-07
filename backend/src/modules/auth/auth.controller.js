@@ -16,10 +16,7 @@ export const login = async (req,res)=>{
     }
 
     console.log("Login efetuado com sucesso!")
-    return res.json({
-        success: true,
-        message: logar_sistema.message
-    })
+    return res.json(logar_sistema)
 
     } catch(error){
         console.log(error)
