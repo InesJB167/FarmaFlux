@@ -1,7 +1,6 @@
 import prisma from "../../../prisma/prisma.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import dotenv from "dotenv"
 
 export const entrar = async (nome_user, senha) => {
 
@@ -13,10 +12,21 @@ export const entrar = async (nome_user, senha) => {
             })
 
             if (!verficar_user) {
+                
+                console.log("User não encontrado")
                 return {
                     success: false,
-                    message: "Usuário não encontrado!"
+                    message: "Credenciais inválidas."
                 }
+                
+            } else if (!verficar_user.ativo){
+
+                console.log("usuário inativo no sistema")
+                return {
+                    success: false,
+                    message: "Credenciais inválidas."
+                }
+                
             }
 
             const senha_hash = verficar_user.password_hash
@@ -25,8 +35,9 @@ export const entrar = async (nome_user, senha) => {
             if (!verificar_senha) {
                 return {
                     success: false,
-                    message: "senha inválida!"
+                    message: "Credenciais inválidas."
                 }
+                console.log("senha inválida!")
             }
             //gerar token aqui
             const secret = process.env.JWT_SECRET

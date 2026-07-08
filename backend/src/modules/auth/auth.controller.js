@@ -11,7 +11,7 @@ export const login = async (req,res)=>{
     try{
         //aqui vai a funçao do service
     const logar_sistema = await entrar(nome_user,senha)
-    if(logar_sistema.success === false){
+    if(!logar_sistema.success){
         return res.status(400).json(logar_sistema)
     }
 
