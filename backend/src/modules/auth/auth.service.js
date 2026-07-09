@@ -33,18 +33,20 @@ export const entrar = async (nome_user, senha) => {
             const verificar_senha = await bcrypt.compare(senha, senha_hash)
 
             if (!verificar_senha) {
+                console.log("senha inválida!")
                 return {
                     success: false,
                     message: "Credenciais inválidas."
                 }
-                console.log("senha inválida!")
+                
             }
             //gerar token aqui
             const secret = process.env.JWT_SECRET
             const payload = {
                 id: verficar_user.id,
                 username: verficar_user.username,
-                role: verficar_user.role
+                role: verficar_user.role,
+                ativo: verficar_user.ativo
             }
 
 
