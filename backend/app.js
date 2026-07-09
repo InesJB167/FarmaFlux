@@ -1,6 +1,7 @@
 import express from "express";
 import cors  from "cors";
 import authRoutes from "./src/modules/auth/auth.routes.js"
+import createUser from "./src/modules/users/router/createUser.routes.js"
 
 const app = express()
 
@@ -11,6 +12,9 @@ app.use(express.json())
 
 //para autenticação
 app.use("/auth" ,authRoutes)
+
+//rotas users
+app.use("/users" ,createUser)
 
 export default app
 
