@@ -1,6 +1,6 @@
 import prisma from "../../../../prisma/prisma.js"
 
-export const criar_utilizador = async (nome, username, password) => {
+export const criarUtilizadorService = async (nome, username, password) => {
 
     const verficar_user = await prisma.utilizadores.findUnique({
         where: {

@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
-import { criar_utilizador } from "../service/createUser.service.js"
+import { criarUtilizadorService } from "../service/criar-utilizador.service.js"
 
-export const criar_user = async (req, res)=>{
+export const criarUtilizador = async (req, res)=>{
     try {
         const {nome ,username ,senha} = req.body
 
@@ -17,7 +17,7 @@ export const criar_user = async (req, res)=>{
         const password = await bcrypt.hash(senha, 12)
 
         //funcao que vai criar o user aqui
-        const user = await criar_utilizador(nome, username, password)
+        const user = await criarUtilizadorService(nome, username, password)
 
         if(!user.success){
             return res.status(409).json(user.message)
