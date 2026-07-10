@@ -1,14 +1,16 @@
 import express from "express"
 import { autenticar } from "../../../middlewares/auth.middleware.js"
+import { verificarStatusConta } from "../../../middlewares/account-status.middleware.js"
+import { verificarUtilizadorAtivo } from "../../../middlewares/check-active-user.middleware.js"
 import { authorization } from "../../../middlewares/authorize.middleware.js"
 import { criarUtilizador } from "../controller/criar-utilizador.controller.js"
 import { listarUtilizador } from "../controller/listar-utilizador.controller.js"
 
 const router = express.Router()
 
-router.post("/create" ,autenticar, authorization(["ADMIN"]),criarUtilizador)
+router.post("/" ,autenticar, verificarStatusConta ,authorization(["ADMIN"]),criarUtilizador)
 
-router.get("/list" ,autenticar, authorization(["ADMIN"]), listarUtilizador)
+router.get("/" ,autenticar, verificarUtilizadorAtivo ,authorization(["ADMIN"]), listarUtilizador)
 
 export default router
 

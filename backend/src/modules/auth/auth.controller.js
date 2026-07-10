@@ -1,16 +1,16 @@
 import {entrar} from "./auth.service.js"
 
 export const login = async (req,res)=>{
-    const nome_user = req.body.nome_user
+    const username = req.body.username
     const senha = req.body.senha
 
-    if(!nome_user || !senha){
+    if(!username || !senha){
         return res.status(400).json({message:"Preencha todos os campos!"})
     }
 
     try{
         //aqui vai a funçao do service
-    const logar_sistema = await entrar(nome_user,senha)
+    const logar_sistema = await entrar(username,senha)
     if(!logar_sistema.success){
         return res.status(400).json(logar_sistema)
     }

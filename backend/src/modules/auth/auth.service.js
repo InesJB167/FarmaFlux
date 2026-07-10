@@ -2,12 +2,12 @@ import prisma from "../../../prisma/prisma.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
-export const entrar = async (nome_user, senha) => {
+export const entrar = async (username, senha) => {
 
     try {
             const verficar_user = await prisma.utilizadores.findUnique({
                 where: {
-                    username: nome_user
+                    username: username
                 }
             })
 
