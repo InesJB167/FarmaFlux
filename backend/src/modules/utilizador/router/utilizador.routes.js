@@ -5,12 +5,15 @@ import { verificarUtilizadorAtivo } from "../../../middlewares/check-active-user
 import { authorization } from "../../../middlewares/authorize.middleware.js"
 import { criarUtilizador } from "../controller/criar-utilizador.controller.js"
 import { listarUtilizador } from "../controller/listar-utilizador.controller.js"
+import { buscarUtilizador } from "../controller/buscar-utilizador.controller.js"
 
 const router = express.Router()
 
 router.post("/" ,autenticar, verificarStatusConta ,authorization(["ADMIN"]),criarUtilizador)
 
 router.get("/" ,autenticar, verificarUtilizadorAtivo ,authorization(["ADMIN"]), listarUtilizador)
+
+router.get("/:id" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), buscarUtilizador)
 
 export default router
 
