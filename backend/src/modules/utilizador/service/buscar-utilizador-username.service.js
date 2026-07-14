@@ -2,9 +2,21 @@ import prisma from "../../../../prisma/prisma.js"
 
 export const buscarUtilizadorPorNomeService = async (username)=>{
 
-    const utilizador = await prisma.utilizadores.findUnique({
+    try {
+        const utilizador = await prisma.utilizadores.findMany({
         where:{
-            username: username
+            username:{
+                //encontra todos os registros semelhantes
+                contains: username
+            }
+        },
+        select:{
+            id: true,
+            nome: true,
+            username: true,
+            role: true,
+            status: true,
+            approved_at: true
         }
     })
 
@@ -17,7 +29,12 @@ export const buscarUtilizadorPorNomeService = async (username)=>{
 
     return {
         success: true,
-        message: "usuário encontrado:",
+        message: "usuário encontrado.",
         data: utilizador
+    }
+
+    } catch (error) {
+        console.log(error.message)
+        throw new Error(error.message)
     }
 }

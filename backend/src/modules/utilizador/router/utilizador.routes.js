@@ -6,12 +6,16 @@ import { authorization } from "../../../middlewares/authorize.middleware.js"
 import { criarUtilizador } from "../controller/criar-utilizador.controller.js"
 import { listarUtilizador } from "../controller/listar-utilizador.controller.js"
 import { buscarUtilizador } from "../controller/buscar-utilizador.controller.js"
+import { buscarUtilizadorPorNome } from "../controller/buscar-utilizador-username.controller.js"
 
 const router = express.Router()
 
 router.post("/"  ,criarUtilizador)
 
 router.get("/" ,autenticar, verificarUtilizadorAtivo ,authorization(["ADMIN"]), listarUtilizador)
+
+//lembre-se o search vem sempre primeiro que o :id
+router.get("/search" ,autenticar , verificarUtilizadorAtivo, authorization(["ADMIN"]), buscarUtilizadorPorNome)
 
 router.get("/:id" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), buscarUtilizador)
 

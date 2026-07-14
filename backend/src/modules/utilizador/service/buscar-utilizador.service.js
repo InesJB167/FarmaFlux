@@ -11,7 +11,8 @@ export const buscarUtilizadorService = async (idUser) =>{
             nome: true,
             username: true,
             role: true,
-            status: true
+            status: true,
+            approved_at: true
         }
     })
 
