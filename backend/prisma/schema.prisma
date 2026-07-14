@@ -101,16 +101,36 @@ enum Role {
   OPERADOR
 }
 
+// -Podes guardar quem aprovou.
+//  -Data da aprovação.
+
+enum StatusConta {
+  PENDENTE
+  ATIVO
+  INATIVO
+  REJEITADO
+}
+
 model utilizadores {
-  id            Int       @id @default(autoincrement())
-  nome          String    @db.VarChar(100)
-  username      String    @unique @db.VarChar(50)
-  password_hash String    @db.VarChar(255)
-  role          Role      @default(OPERADOR)
-  ativo         Boolean   @default(true)
-  created_at    DateTime  @default(now())
+  id            Int         @id @default(autoincrement())
+  nome          String      @db.VarChar(100)
+  username      String      @unique @db.VarChar(50)
+  password_hash String      @db.VarChar(255)
+  role          Role        @default(OPERADOR)
+  status        StatusConta @default(PENDENTE)
+  created_at    DateTime    @default(now())
   deleted_at    DateTime?
-  updated_at    DateTime  @updatedAt
+  updated_at    DateTime    @updatedAt
+  approved_at   DateTime?
+  rejected_at   DateTime?
+  approved_by   Int? //chave estrngeira referenciando a mesma tabela
+  rejected_by   Int?
+
+  approvedBy utilizadores? @relation("AdminAprovacao", fields: [approved_by], references: [id])
+  rejectedBy utilizadores? @relation("AdminReprovacao", fields: [rejected_by], references: [id])
+
+  approvedUsers utilizadores[] @relation("AdminAprovacao")
+  rejectedUsers utilizadores[] @relation("AdminReprovacao")
 
   vendas         vendas[]
   logs_auditoria logs_auditoria[]
@@ -181,6 +201,7 @@ model pagamentos {
 
 enum Acao {
   CREATE
+  LOGIN
   UPDATE
   DELETE
   CANCELAR_VENDA
@@ -200,7 +221,7 @@ model logs_auditoria {
   id_registro  Int
   valor_antigo Json? //deve vir em json pra evitar erros 
   valor_novo   Json?
-  timestamp    DateTime @default(now())
+  created_at   DateTime @default(now())
 
   //Relações
   utilizador utilizadores @relation(fields: [utilizador_id], references: [id])

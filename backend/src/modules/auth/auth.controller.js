@@ -1,6 +1,12 @@
 import {entrar} from "./auth.service.js"
 
 export const login = async (req,res)=>{
+
+    /**
+     * !apenas quem estiver ativo vai poder acessar o sistema 
+     * ?para isso vai ser preciso saber o status da conta do user
+     * *como verificar o status da conta do user logo no login ??
+     */
     const username = req.body.username
     const senha = req.body.senha
 

@@ -9,7 +9,7 @@ import { buscarUtilizador } from "../controller/buscar-utilizador.controller.js"
 
 const router = express.Router()
 
-router.post("/" ,autenticar, verificarStatusConta ,authorization(["ADMIN"]),criarUtilizador)
+router.post("/" ,autenticar, verificarStatusConta ,criarUtilizador)
 
 router.get("/" ,autenticar, verificarUtilizadorAtivo ,authorization(["ADMIN"]), listarUtilizador)
 

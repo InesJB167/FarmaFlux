@@ -4,7 +4,7 @@ export const verificarStatusConta = async (req, res, next) => {
 
     try {
         /**
-         * !apenas users com o status ativo(ativo: true) podem acessar o sistema e realizar as demais atividades no mesmo.
+         * !apenas users com o status ativo podem acessar o sistema e realizar as demais atividades no mesmo.
          * 
          * ? ao fazer o login o sistema deve verificar se o user esta ativo ou inativo
          * 
@@ -18,8 +18,8 @@ export const verificarStatusConta = async (req, res, next) => {
         const username = req.body.username
         if (!username) {
             return res.status(400).json({ messge: "campo obrigatório" })
-        } 
-        
+        }
+
         if (!username.trim()) {
             return res.status(400).json({ message: "Campo obrigatório!" })
         }
@@ -28,6 +28,10 @@ export const verificarStatusConta = async (req, res, next) => {
         const verificarUtilizador = await prisma.utilizadores.findUnique({
             where: {
                 username: username
+            },
+            select:{
+                id: true,
+                status: true
             }
         })
 
@@ -38,14 +42,30 @@ export const verificarStatusConta = async (req, res, next) => {
         }
 
         //verificar o status do user
-        if (!verificarUtilizador.ativo) {
-            console.log("usuário inativo no banco de dados")
-            return res.status(403).json({ message: " usuário inativo!" })
+        switch (verificarUtilizador.status) {
+            case "PENDENTE":
+                console.log("status da conta:", verificarUtilizador.status)
+                return res.status(403).json({ message: "Conta aguardando avaliação!" })
+
+            case "REJEITADO":
+                console.log("status da conta:", verificarUtilizador.status)
+                return res.status(403).json({ message: "Conta inválida!" })
+
+            case "INATIVO":
+                console.log("status da conta:", verificarUtilizador.status)
+                return res.status(403).json({ message: "Conta inativa!" })
+
+            case "ATIVO":
+                console.log("status do user ", verificarUtilizador.status)
+                next()
+
+            default:
+                console.log("staus nao identificado")
+            default:
+                return res.status(500).json({
+                    message: "Status da conta inválido."
+                })
         }
-
-        console.log("status do user ", verificarUtilizador.ativo)
-
-        next()
 
     } catch (error) {
         console.log(error.message)

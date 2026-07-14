@@ -11,7 +11,7 @@ async function main() {
     if (!senha) {
         throw new Error("Senha não definida no .env")
     }
-
+    
     const hash = await bcrypt.hash(senha, 10)
     const user = await prisma.utilizadores.upsert({
         where: {
@@ -20,7 +20,9 @@ async function main() {
 
         update: {
             nome: "Administrador",
-            password_hash: hash
+            password_hash: hash,
+            role: "ADMIN",
+            status: "ATIVO"
         },
 
         create: {
@@ -28,7 +30,7 @@ async function main() {
             nome: "Administrador",
             password_hash: hash,
             role: "ADMIN",
-            ativo: true,
+            status: "ATIVO"
         }
 
     })
