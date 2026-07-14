@@ -3,15 +3,12 @@ import prisma from "../../../../prisma/prisma.js"
 export const listarUtilizadorService = async ( idUser) =>{
 
     const utilizadores = await prisma.utilizadores.findMany({
-        where:{
-            ativo: true
-        },
         select:{
             id: true,
             nome: true,
             username: true,
             role: true,
-            ativo: true
+            status: true
         }
     })
 

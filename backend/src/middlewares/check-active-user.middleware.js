@@ -9,7 +9,7 @@ export const verificarUtilizadorAtivo = async (req, res, next)=>{
                 id: idUser
             },
             select:{
-                ativo: true
+                status: true
             }
         })
 
@@ -18,14 +18,26 @@ export const verificarUtilizadorAtivo = async (req, res, next)=>{
             return res.status(404).json({message:"usuário não encontrado"})
         }
 
-        if(!utilizador.ativo){
-            console.log("user inativo")
-            return res.status(403).json({message: "usuário inativo!"})
-        }
+        switch(utilizador.status){
+            case "PENDENTE":
+                return res.status(403).json({message:"Conta aguardando avaliação."})
+            case "REJEITADO":
+                return res.status(403).json({ message: "Conta inválida!" })
+            case "INATIVO":
+                return res.status(403).json({ message: "Conta inativa!" })
 
-        next()
+            case "ATIVO":
+                console.log("status do user ", utilizador.status)
+                next()
+                break
+            default:
+                console.log("staus nao identificado",utilizador.status)
+                return res.status(500).json({
+                    message: "Status da conta inválido."
+                })
+        }
     } catch (error) {
         console.log(error.message)
-        return res.status(500).json({error:error.message})
+        return res.status(500).json(error.message)
     }
 }

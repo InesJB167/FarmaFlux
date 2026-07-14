@@ -38,7 +38,7 @@ export const entrar = async ( username, senha) => {
                     id: verficar_user.id,
                     username: verficar_user.username,
                     role: verficar_user.role,
-                    ativo: verficar_user.ativo
+                    status: verficar_user.status//mudei algo aqui ...de ativo pra o novo atributo status
                 }
 
 

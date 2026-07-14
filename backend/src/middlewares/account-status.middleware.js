@@ -61,7 +61,6 @@ export const verificarStatusConta = async (req, res, next) => {
 
             default:
                 console.log("staus nao identificado")
-            default:
                 return res.status(500).json({
                     message: "Status da conta inválido."
                 })
