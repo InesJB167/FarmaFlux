@@ -8,6 +8,7 @@ import { listarUtilizador } from "../controller/listar-utilizador.controller.js"
 import { buscarUtilizador } from "../controller/buscar-utilizador.controller.js"
 import { buscarUtilizadorPorNome } from "../controller/buscar-utilizador-username.controller.js"
 import { atualizarUtilizador } from "../controller/atualizar-utilizador.controller.js"
+import { alterarStatusUtilizador } from "../controller/alterar-status-utilizador.controller.js"
 
 const router = express.Router()
 
@@ -20,8 +21,10 @@ router.get("/search" ,autenticar , verificarUtilizadorAtivo, authorization(["ADM
 
 router.get("/:id" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), buscarUtilizador)
 
+//endpoint que permite apenas o user da propria conta alterar o seu perfil
 router.patch("/" ,autenticar ,verificarUtilizadorAtivo, atualizarUtilizador)
 
+router.patch("/:id/status" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), alterarStatusUtilizador )
 
 export default router
 

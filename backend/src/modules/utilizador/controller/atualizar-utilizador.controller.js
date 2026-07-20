@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 
 export const atualizarUtilizador = async (req, res) => {
     try {
-        //*por agora so pra corrigir a bagunça o id vai ser */
+       
         const idUser = req.user.id
 
         if (!idUser) {
