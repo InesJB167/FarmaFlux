@@ -7,6 +7,7 @@ import { criarUtilizador } from "../controller/criar-utilizador.controller.js"
 import { listarUtilizador } from "../controller/listar-utilizador.controller.js"
 import { buscarUtilizador } from "../controller/buscar-utilizador.controller.js"
 import { buscarUtilizadorPorNome } from "../controller/buscar-utilizador-username.controller.js"
+import { atualizarUtilizador } from "../controller/atualizar-utilizador.controller.js"
 
 const router = express.Router()
 
@@ -18,6 +19,8 @@ router.get("/" ,autenticar, verificarUtilizadorAtivo ,authorization(["ADMIN"]), 
 router.get("/search" ,autenticar , verificarUtilizadorAtivo, authorization(["ADMIN"]), buscarUtilizadorPorNome)
 
 router.get("/:id" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), buscarUtilizador)
+
+router.patch("/" ,autenticar ,verificarUtilizadorAtivo, atualizarUtilizador)
 
 
 export default router

@@ -28,7 +28,7 @@ export const verificarUtilizadorAtivo = async (req, res, next)=>{
 
             case "ATIVO":
                 console.log("status do user ", utilizador.status)
-                next()
+                return next()
                 break
             default:
                 console.log("staus nao identificado",utilizador.status)
