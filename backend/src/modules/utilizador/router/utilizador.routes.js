@@ -10,6 +10,7 @@ import { buscarUtilizadorPorNome } from "../controller/buscar-utilizador-usernam
 import { atualizarUtilizador } from "../controller/atualizar-utilizador.controller.js"
 import { alterarStatusUtilizador } from "../controller/alterar-status-utilizador.controller.js"
 import { alteralRoleUtilizador } from "../controller/alterar-role-utilizador.controller.js"
+import { deletarUtilizador } from "../controller/deletar-utilizador.controller.js"
 
 const router = express.Router()
 
@@ -28,6 +29,8 @@ router.patch("/" ,autenticar ,verificarUtilizadorAtivo, atualizarUtilizador)
 router.patch("/:id/status" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), alterarStatusUtilizador )
 
 router.patch("/:id/role" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), alteralRoleUtilizador)
+
+router.delete("/:id" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), deletarUtilizador)
 
 export default router
 
