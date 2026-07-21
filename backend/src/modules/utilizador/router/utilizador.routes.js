@@ -9,6 +9,7 @@ import { buscarUtilizador } from "../controller/buscar-utilizador.controller.js"
 import { buscarUtilizadorPorNome } from "../controller/buscar-utilizador-username.controller.js"
 import { atualizarUtilizador } from "../controller/atualizar-utilizador.controller.js"
 import { alterarStatusUtilizador } from "../controller/alterar-status-utilizador.controller.js"
+import { alteralRoleUtilizador } from "../controller/alterar-role-utilizador.controller.js"
 
 const router = express.Router()
 
@@ -25,6 +26,8 @@ router.get("/:id" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]
 router.patch("/" ,autenticar ,verificarUtilizadorAtivo, atualizarUtilizador)
 
 router.patch("/:id/status" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), alterarStatusUtilizador )
+
+router.patch("/:id/role" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), alteralRoleUtilizador)
 
 export default router
 
