@@ -11,6 +11,7 @@ import { atualizarUtilizador } from "../controller/atualizar-utilizador.controll
 import { alterarStatusUtilizador } from "../controller/alterar-status-utilizador.controller.js"
 import { alteralRoleUtilizador } from "../controller/alterar-role-utilizador.controller.js"
 import { deletarUtilizador } from "../controller/deletar-utilizador.controller.js"
+import { rejeitarUtilizador } from "../controller/rejeitar-utilizador.controller.js"
 
 const router = express.Router()
 
@@ -27,6 +28,8 @@ router.get("/:id" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]
 router.patch("/" ,autenticar ,verificarUtilizadorAtivo, atualizarUtilizador)
 
 router.patch("/:id/status" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), alterarStatusUtilizador )
+
+router.patch("/:id/reject" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]) ,rejeitarUtilizador)
 
 router.patch("/:id/role" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), alteralRoleUtilizador)
 
