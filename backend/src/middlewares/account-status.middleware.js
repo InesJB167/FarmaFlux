@@ -27,7 +27,8 @@ export const verificarStatusConta = async (req, res, next) => {
 
         const verificarUtilizador = await prisma.utilizadores.findUnique({
             where: {
-                username: username
+                username: username,
+                deleted_at: null
             },
             select:{
                 id: true,

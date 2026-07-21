@@ -7,7 +7,8 @@ export const entrar = async ( username, senha) => {
     try {
         const verficar_user = await prisma.utilizadores.findUnique({
             where: {
-                username: username
+                username: username,
+                deleted_at: null
             }
         })
 

@@ -4,7 +4,8 @@ export const buscarUtilizadorService = async (idUser) =>{
 
     const buscarUtilizador = await prisma.utilizadores.findUnique({
         where:{
-            id: idUser
+            id: idUser,
+            deleted_at: null
         },
         select:{
             id: true,

@@ -8,7 +8,8 @@ export const buscarUtilizadorPorNomeService = async (username)=>{
             username:{
                 //encontra todos os registros semelhantes
                 contains: username
-            }
+            },
+            deleted_at: null
         },
         select:{
             id: true,

@@ -55,7 +55,8 @@ export const atualizarUtilizadorService = async (idUser ,nome, username, hash )=
 
         const atualizar = await prisma.utilizadores.update({
             where:{
-                id: idUser
+                id: idUser,
+                deleted_at: null
             },
             data: dadosAtuais
         })

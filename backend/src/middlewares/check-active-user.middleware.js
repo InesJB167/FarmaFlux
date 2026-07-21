@@ -6,7 +6,8 @@ export const verificarUtilizadorAtivo = async (req, res, next)=>{
 
         const utilizador = await prisma.utilizadores.findUnique({
             where:{
-                id: idUser
+                id: idUser,
+                deleted_at: null
             },
             select:{
                 status: true

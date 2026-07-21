@@ -15,7 +15,8 @@ export const alteralRoleUtilizadorService = async (id, novoRole)=>{
         
         const mudarRole = await prisma.utilizadores.update({
             where:{
-                id: id
+                id: id,
+                deleted_at: null
             },
             data:{
                 role: novoRole

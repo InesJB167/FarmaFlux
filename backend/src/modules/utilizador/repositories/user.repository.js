@@ -8,7 +8,8 @@ export const buscarUtilizadorPorId = async(idUser)=>{
         console.log("id do user a ser procurado ",idUser)
         const user = await prisma.utilizadores.findUnique({
             where:{
-                id: idUser
+                id: idUser,
+                deleted_at: null
             },
             select:{
                 id: true,
