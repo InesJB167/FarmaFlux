@@ -125,12 +125,15 @@ model utilizadores {
   rejected_at   DateTime?
   approved_by   Int? //chave estrngeira referenciando a mesma tabela
   rejected_by   Int?
+  deleted_by    Int?
 
   approvedBy utilizadores? @relation("AdminAprovacao", fields: [approved_by], references: [id])
   rejectedBy utilizadores? @relation("AdminReprovacao", fields: [rejected_by], references: [id])
+  deletedBy  utilizadores? @relation("AdminDelete", fields: [deleted_by], references: [id])
 
   approvedUsers utilizadores[] @relation("AdminAprovacao")
   rejectedUsers utilizadores[] @relation("AdminReprovacao")
+  deletedUsers  utilizadores[] @relation("AdminDelete")
 
   vendas         vendas[]
   logs_auditoria logs_auditoria[]

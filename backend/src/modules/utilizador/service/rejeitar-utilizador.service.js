@@ -2,7 +2,7 @@ import prisma from "../../../../prisma/prisma.js"
 import { buscarUtilizadorPorId } from "../repositories/user.repository.js"
 
 
-export const rejeitarUtilizadorService = async (idUser) =>{
+export const rejeitarUtilizadorService = async (idUser, idAdmin) =>{
     try {
         const user = await buscarUtilizadorPorId(idUser)
 
@@ -17,6 +17,7 @@ export const rejeitarUtilizadorService = async (idUser) =>{
             data:{
                 status: "REJEITADO",
                 rejected_at: new Date(),
+                rejected_by: idAdmin
             },
             select:{
                 id: true,

@@ -1,7 +1,7 @@
 import prisma from "../../../../prisma/prisma.js"
 import { buscarUtilizadorPorId } from "../repositories/user.repository.js"
 
-export const alteralRoleUtilizadorService = async (id, novoRole)=>{
+export const alteralRoleUtilizadorService = async (id,idAdmin, novoRole)=>{
     try {
         const userSelecionado = await buscarUtilizadorPorId(id)
 
@@ -19,7 +19,8 @@ export const alteralRoleUtilizadorService = async (id, novoRole)=>{
                 deleted_at: null
             },
             data:{
-                role: novoRole
+                role: novoRole,
+                updated_at: new Date(),
             }, 
             select:{
                 id: true,

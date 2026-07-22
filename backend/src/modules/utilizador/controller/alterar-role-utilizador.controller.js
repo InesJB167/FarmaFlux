@@ -2,12 +2,8 @@ import { alteralRoleUtilizadorService } from "../service/alterar-role-utilizador
 
 export const alteralRoleUtilizador = async (req, res) =>{
     try {
-        /**
-     * TAREFA: alterar o role do utilizador.
-     * existem 3 roles: ADMIN, GERENTE, OPERADOR
-     * o user vai selecionar um usuário verificar o role do mesmo
-     * a seguir ele pode selecionar um dos roles e a seguir altera-lo
-     */
+    //o admin que fez a alteração
+    const idAdmin = req.user.id
 
     const id = Number(req.params.id)
     console.log("user selecionado id",id)
@@ -27,7 +23,7 @@ export const alteralRoleUtilizador = async (req, res) =>{
         return res.status(400).json({message:" role inválido!"})
     }
 
-    const alterarRole = await alteralRoleUtilizadorService(id, novoRole)
+    const alterarRole = await alteralRoleUtilizadorService(id, idAdmin, novoRole)
 
     if(!alterarRole.success) return res.status(404).json(alterarRole)
     

@@ -8,6 +8,8 @@ export const alterarStatusUtilizador = async (req, res) => {
          * *segundo: verificar o status
          * *terceiro: mudar o status
          */
+        //o admin que fez a alteração
+        const idAdmin = req.user.id
 
         const id = Number(req.params.id)
 
@@ -19,7 +21,7 @@ export const alterarStatusUtilizador = async (req, res) => {
         }
 
         //service
-        const atualizarStatus = await alterarStatusUtilizadorService(id )
+        const atualizarStatus = await alterarStatusUtilizadorService(id,idAdmin)
 
         if (!atualizarStatus.success) {
             return res.status(400).json(atualizarStatus)

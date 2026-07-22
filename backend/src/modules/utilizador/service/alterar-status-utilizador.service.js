@@ -2,7 +2,7 @@ import prisma from "../../../../prisma/prisma.js"
 import { buscarUtilizadorPorId } from "../repositories/user.repository.js"
 
 
-export const alterarStatusUtilizadorService = async (idUser) => {
+export const alterarStatusUtilizadorService = async (idUser, idAdmin) => {
     try {
         const user = await buscarUtilizadorPorId(idUser)
         if (!user.success) {
@@ -27,12 +27,16 @@ export const alterarStatusUtilizadorService = async (idUser) => {
                 deleted_at: null
             },
             data:{
-                status: novoStatus
+                status: novoStatus,
+                approved_by: idAdmin,
+                approved_at: new Date()
             },
             select:{
                 id: true,
                 username: true,
-                status: true
+                status: true,
+                approved_by: true,
+                approved_at: true
             }
         })
 
