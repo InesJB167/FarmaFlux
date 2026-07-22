@@ -23,7 +23,8 @@ export const rejeitarUtilizadorService = async (idUser, idAdmin) =>{
                 id: true,
                 username: true,
                 status: true,
-                rejected_at: true
+                rejected_at: true,
+                rejected_by: true
             }
         })
 

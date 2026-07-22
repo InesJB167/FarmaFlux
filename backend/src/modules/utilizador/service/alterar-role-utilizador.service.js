@@ -11,6 +11,8 @@ export const alteralRoleUtilizadorService = async (id,idAdmin, novoRole)=>{
 
         if(!userSelecionado.success) return userSelecionado
 
+        if(userSelecionado.data.status === "PENDENTE") return { success: false , message: "o role desse user não pode ser modificado."}
+
         if(userSelecionado.data.role === novoRole) return {success: false, message: "O utilizador já possui esse role."}
         
         const mudarRole = await prisma.utilizadores.update({
