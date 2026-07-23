@@ -6,7 +6,7 @@ export const listarCategoria = async(req, res) =>{
 
         const listar = await listarCategoriaService()
 
-        if(!listar) return res.status(404).json(listar)
+        if(!listar.success) return res.status(404).json(listar)
         
         return res.json(listar)
         
