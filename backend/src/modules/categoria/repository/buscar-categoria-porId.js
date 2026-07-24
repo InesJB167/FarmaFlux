@@ -11,12 +11,5 @@ export const buscarCategoriaPorId = async (idCategoria) =>{
          return null
     }
 
-    const categoria ={
-        id: categoriaProcurada.id,
-        nome: categoriaProcurada.nome,
-        descricao: categoriaProcurada.descricao,
-        created_at: categoriaProcurada.created_at
-    }
-
-    return categoria
+    return categoriaProcurada
 }
