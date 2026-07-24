@@ -1,13 +1,22 @@
 import prisma from "../../../../prisma/prisma.js"
-import { buscarCategoriaPorId } from "../repository/buscar-categoria-porId.js"
+import { buscarCategoriaPorIdContagem } from "../repository/buscar-categoria-contagem.js"
 
 export const deletarCategoriaService = async(idCategoria) =>{
-    const categoriaExistente = await buscarCategoriaPorId(idCategoria)
+    const categoriaExistente = await buscarCategoriaPorIdContagem(idCategoria)
 
     if(!categoriaExistente) return {
         success: false,
         status: 404,
         message:  "categoria nao encontrada"
+    }
+
+    if(categoriaExistente._count.medicamentos > 0){
+        
+        return {
+            success: false,
+            status: 409,
+            message: "Categoria em uso: existem medicamentos ainda registrados nessa categoria."
+        }
     }
 
     const deletar = await prisma.categorias.update({
