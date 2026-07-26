@@ -28,6 +28,7 @@ model localizacoes {
   estante      String         @db.VarChar(50)
   nivel        String         @db.VarChar(50)
   descricao    String?        @db.VarChar(200)
+  deleted_at   DateTime?
   medicamentos medicamentos[]
 }
 
