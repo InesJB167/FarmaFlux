@@ -7,6 +7,9 @@ export const buscarLocalizacaoPorZonaEstanteNivel = async( zona ,estante ,nivel)
             estante,
             nivel,
             deleted_at: null
+        }, 
+        include:{
+            medicamentos: true
         }
     })
 }
