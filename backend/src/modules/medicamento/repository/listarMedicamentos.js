@@ -9,14 +9,18 @@ export const listarMedicamentos = async () =>{
         include:{
             categoria:{
                 select:{
-                    id: true
+                    id: true,
+                    nome: true
                 }
             },
-            localizacao: {
+            localizacao:{
                 select:{
-                    id: true
+                    id: true,
                 }
             }
+        }, 
+        orderBy:{
+            categoria_id: "asc"
         }
     })
 }

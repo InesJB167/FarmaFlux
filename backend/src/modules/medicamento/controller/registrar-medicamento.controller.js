@@ -18,7 +18,7 @@ export const registrarMedicamento = async (req, res) => {
                 }
             
             console.log("categoria_id: ",categoria_id,"localizacao_id ",localizacao_id)
-            if (!nome || !principio_ativo || !preco_venda || !stock_minimo || !categoria_id || !localizacao_id) {
+            if (!nome || !principio_ativo || !preco_venda || !stock_minimo || !categoria_id || !localizacao_id || !dosagem) {
                 return res.status(400).json({ message: "Campo obrigatório." })
             }
             
