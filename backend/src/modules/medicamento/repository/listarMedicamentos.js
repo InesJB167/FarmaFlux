@@ -16,6 +16,9 @@ export const listarMedicamentos = async () =>{
             localizacao:{
                 select:{
                     id: true,
+                    zona: true,
+                    estante: true,
+                    nivel: true
                 }
             }
         }, 
