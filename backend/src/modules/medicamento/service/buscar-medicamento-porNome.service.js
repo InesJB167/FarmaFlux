@@ -1,9 +1,9 @@
-import { buscarMedicamentoPorNome } from "../repository/buscarMedicamentoPorNome.js"
+import { buscarMedicamentosPorNome } from "../repository/buscarMedicamentoPorNome.js"
 
-export const buscarMedicamentoPorNomeService = async (nome) =>{
-    const medicamento = await buscarMedicamentoPorNome(nome)
+export const buscarMedicamentosPorNomeService = async (nome) =>{
+    const medicamento = await buscarMedicamentosPorNome(nome)
 
-    if(!medicamento) {
+    if(medicamento.length === 0) {
         return {
             success: false,
             status: 404,

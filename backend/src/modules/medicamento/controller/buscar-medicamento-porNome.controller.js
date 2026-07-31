@@ -3,6 +3,7 @@ import { buscarMedicamentoPorNomeService } from "../service/buscar-medicamento-p
 export const buscarMedicamentoPorNome = async (req, res) =>{
     try {
         const nome = req.query.nome?.trim()
+        console.log(req.query)
 
         if(!nome) return res.status(400).json({message: "Informe o nome do medicamento."})
 
