@@ -16,8 +16,11 @@ export const verificarStatusConta = async (req, res, next) => {
          * 
          */
         const username = req.body.username
+
+        if(username === undefined ) return res.status(400).json({message: "Informe os dados para a autenticação."})
+
         if (!username) {
-            return res.status(400).json({ messge: "campo obrigatório" })
+            return res.status(400).json({ message: "campo obrigatório" })
         }
 
         if (!username.trim()) {

@@ -10,6 +10,8 @@ export const login = async (req,res)=>{
     const username = req.body.username
     const senha = req.body.senha
 
+    if(username === undefined && senha === undefined ) return res.status(400).json({message: "Informe os dados para a autenticação."})
+
     if(!username || !senha){
         return res.status(400).json({message:"Preencha todos os campos!"})
     }
