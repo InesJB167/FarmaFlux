@@ -63,14 +63,14 @@ model barcodes {
 }
 
 model fornecedores {
-  id           Int      @id @default(autoincrement())
-  nome_empresa String   @db.VarChar(150)
-  nif          String   @unique @db.VarChar(20)
-  contacto     String   @db.VarChar(50)
-  endereco     String   @db.VarChar(200)
-  created_at   DateTime @default(now())
-
-  lotes lotes[]
+  id           Int       @id @default(autoincrement())
+  nome_empresa String    @db.VarChar(150)
+  nif          String    @unique @db.VarChar(20)
+  contacto     String    @db.VarChar(50)
+  endereco     String    @db.VarChar(200)
+  created_at   DateTime  @default(now())
+  deleted_at   DateTime?
+  lotes        lotes[]
 }
 
 model lotes {

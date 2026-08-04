@@ -5,6 +5,7 @@ import utilizadoresRoutes from "./src/modules/utilizador/router/utilizador.route
 import categoriasRoutes from "./src/modules/categoria/routes/categoria.routes.js"
 import localizacoesRoutes from "./src/modules/localizacoes/routes/localizacoes.routes.js"
 import medicamentosRoutes from "./src/modules/medicamento/routes/medicamentos.routes.js"
+import fornecedoresRoutes from "./src/modules/fornecedor/router/fornecedor.route.js"
 
 const app = express()
 
@@ -27,6 +28,9 @@ app.use("/localizacoes" ,localizacoesRoutes)
 
 //rota de medicamentos
 app.use("/medicamentos" ,medicamentosRoutes)
+
+//rota de fornecedores
+app.use("/fornecedores" ,fornecedoresRoutes)
 
 export default app
 
