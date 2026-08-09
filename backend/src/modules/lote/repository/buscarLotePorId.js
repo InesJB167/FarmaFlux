@@ -27,9 +27,6 @@ export const buscarLotePorId = async (idLote) =>{
             preco_custo: true,
             data_entrada: true,
             data_validade: true
-        },
-        orderBy:{
-            data_validade: "asc"
         }
     })
 }
