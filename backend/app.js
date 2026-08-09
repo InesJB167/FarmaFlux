@@ -6,6 +6,9 @@ import categoriasRoutes from "./src/modules/categoria/routes/categoria.routes.js
 import localizacoesRoutes from "./src/modules/localizacoes/routes/localizacoes.routes.js"
 import medicamentosRoutes from "./src/modules/medicamento/routes/medicamentos.routes.js"
 import fornecedoresRoutes from "./src/modules/fornecedor/router/fornecedor.route.js"
+import lotesRoutes from "./src/modules/lote/routes/lotes.route.js"
+
+//?"Primeiro fazemos funcionar. Depois fazemos funcionar direito. Só depois fazemos bonito."
 
 const app = express()
 
@@ -31,6 +34,9 @@ app.use("/medicamentos" ,medicamentosRoutes)
 
 //rota de fornecedores
 app.use("/fornecedores" ,fornecedoresRoutes)
+
+//rota de lotes
+app.use("/lotes" ,lotesRoutes)
 
 export default app
 

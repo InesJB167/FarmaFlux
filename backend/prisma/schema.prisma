@@ -84,10 +84,11 @@ model lotes {
   data_validade  DateTime
   qtd_inicial    Int
   qtd_atual      Int
-  preco_custo    Decimal  @db.Decimal(15, 2)
-  nif_fornecedor String   @unique @db.VarChar(20)
-  data_entrada   DateTime @default(now())
-  created_at     DateTime @default(now())
+  preco_custo    Decimal   @db.Decimal(15, 2)
+  nif_fornecedor String    @db.VarChar(20)
+  data_entrada   DateTime  @default(now())
+  created_at     DateTime  @default(now())
+  deleted_at     DateTime?
 
   // Relações
   fornecedor  fornecedores @relation(fields: [fornecedor_id], references: [id])
