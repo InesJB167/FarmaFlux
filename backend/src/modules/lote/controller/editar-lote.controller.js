@@ -67,6 +67,15 @@ export const editarLote = async (req, res) => {
             }
         }
 
+        if(req.body.hasOwnProperty("nif")){
+            const nif = req.body.nif.trim()
+            if(!nif){
+                return res.status(400).json({ message: "Nif inválido." })
+            } else {
+                dadosEditados.nif_fornecedor = nif
+            }
+        }
+
         const editandoLote = await editarLoteService(id,dadosEditados)
 
         if(!editandoLote.success) return res.status(editandoLote.status).json(editandoLote)

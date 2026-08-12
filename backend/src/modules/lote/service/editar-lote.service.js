@@ -4,6 +4,7 @@ import { buscarLotePorId } from "../repository/buscarLotePorId.js";
 import { buscarLotePorNumeroFornecedorMedicamento } from "../repository/buscarLotePorNumeroFornecedorEMedicamento.js";
 import { buscarMedicamentoPorId } from "../../medicamento/repository/buscarMedicamentoPorId.js"
 import { buscarFornecedorPorId } from "../../fornecedor/repository/buscarFornecedorPorId.js"
+import { buscarFornecedorPorNif } from "../../fornecedor/repository/buscarFornecedorPorNif.js"
 
 export const editarLoteService = async (idLote, dadosModificados) => {
     const buscarLote = await buscarLotePorId(idLote)
@@ -27,8 +28,11 @@ export const editarLoteService = async (idLote, dadosModificados) => {
         preco_custo: dadosModificados.preco_custo ?? buscarLote.preco_custo
     }
 
+    console.log("dados novos ", dadosNovos)
+
     let medicamento_id = buscarLote.medicamento.id
     let fornecedor_id = buscarLote.fornecedor.id
+    console.log("nif do fornecedor atual ",fornecedor_id)
 
     /**
      * !o problema é para manter o id fornecedor e medicamento caso eles não sejam atualizados tem isso ai em cima ...assim no update de outra coisa eles permanecem mas o prisma nao aceita a atribuicao de uma fk assim precisa ser pelo relacionamento. Ou seja os fks nao podem ser passados pelo mesmo objecto que os dados normais.COMO RESOLVER??
@@ -68,6 +72,24 @@ export const editarLoteService = async (idLote, dadosModificados) => {
         }
     }
 
+    if (dadosModificados.hasOwnProperty("nif_fornecedor")) {
+        const nif = dadosModificados.nif_fornecedor
+        const encontrarNifFornecedor = await buscarFornecedorPorNif(nif)
+
+        if (!encontrarNifFornecedor) {
+            return {
+                success: false,
+                status: 404,
+                message: "Não foi encontrado nenhum fornecedor com este NIF."
+            }
+        } else {
+            console.log("fornecedor encontrado ",encontrarNifFornecedor)
+            fornecedor_id = encontrarNifFornecedor.id
+            console.log("id do fornecedor apos a troca do nif ",fornecedor_id," nif encontrado ", nif)
+            dadosNovos.nif_fornecedor = nif
+        }
+    }
+
     if (dadosModificados.hasOwnProperty("qtd_atual")) {
         if (dadosModificados.qtd_atual > buscarLote.qtd_inicial) {
             return {
@@ -75,8 +97,8 @@ export const editarLoteService = async (idLote, dadosModificados) => {
                 status: 409,
                 message: "Quantidade atual não pode ser maior que a quantidade inicial."
             }
-        } else if(dadosModificados.qtd_atual < 0){
-            return{
+        } else if (dadosModificados.qtd_atual < 0) {
+            return {
                 success: false,
                 status: 400,
                 message: "Quantidade atual não pode ser negativa."
@@ -101,7 +123,7 @@ export const editarLoteService = async (idLote, dadosModificados) => {
     }
 
     const editarLote = await prisma.lotes.update({
-        where:{
+        where: {
             id: idLote
         },
         data: {
