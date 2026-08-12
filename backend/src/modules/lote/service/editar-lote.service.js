@@ -33,7 +33,7 @@ export const editarLoteService = async (idLote, dadosModificados) => {
     let medicamento_id = buscarLote.medicamento.id
     let fornecedor_id = buscarLote.fornecedor.id
     console.log("nif do fornecedor atual ",fornecedor_id)
-
+    
     /**
      * !o problema é para manter o id fornecedor e medicamento caso eles não sejam atualizados tem isso ai em cima ...assim no update de outra coisa eles permanecem mas o prisma nao aceita a atribuicao de uma fk assim precisa ser pelo relacionamento. Ou seja os fks nao podem ser passados pelo mesmo objecto que os dados normais.COMO RESOLVER??
      * *E se eu manter os dados normais sendo passados em um unnico objecto e cada fk em uma variavel separada??
