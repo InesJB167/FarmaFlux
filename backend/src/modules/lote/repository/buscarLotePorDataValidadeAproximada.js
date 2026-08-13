@@ -1,6 +1,6 @@
 import prisma from "../../../../prisma/prisma.js";
 
-export const buscarLotesPorDataValidadeAproximada = async ()=>{
+export const buscarLotesPertoDoVencimento = async ()=>{
     //?essa funçao fará a busca de lotes que estao proximos da data de validade, ou seja ,um mês proximo da data de validade.
     /**
      * *como ver se a data atual esta um mes aproximada da data de vencimento??
@@ -15,14 +15,15 @@ export const buscarLotesPorDataValidadeAproximada = async ()=>{
     const dataAtual = new Date()
     console.log("data atual ",dataAtual)
 
-    const mesAtual = dataAtual.getMonth()
-    const dataComMesIncrementado  = dataAtual.setMonth(mesAtual + 1)
-    console.log("data atual daqui a um mes ", dataComMesIncrementado)
+    const dataUmMesAdiante = new Date(dataAtual)
+    dataUmMesAdiante.setMonth(dataAtual.getMonth() + 1)
+    console.log("data atual daqui a um mes ", dataUmMesAdiante)
 
     return await prisma.lotes.findMany({
         where:{
             data_validade: {
-                lt: dataComMesIncrementado
+                gte:dataAtual,
+                lt: dataUmMesAdiante
             },
             deleted_at: null
         },
@@ -49,7 +50,7 @@ export const buscarLotesPorDataValidadeAproximada = async ()=>{
             data_validade: true
         },
         orderBy:{
-            numero_lote: "asc"
+            data_validade: "asc"
         }
     })
 }

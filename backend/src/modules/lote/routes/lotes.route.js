@@ -8,11 +8,13 @@ import { buscarLotePorId } from "../controller/buscar-lote-porId.controller.js"
 import { editarLote } from "../controller/editar-lote.controller.js"
 import { eliminarlote } from "../controller/deletar-lote.controller.js"
 import { pesquisarLotes } from "../controller/pesquisar-lotes.controller.js"
+import { listarLotesProximoVencimento } from "../controller/buscar-lotes-comValidade.controller.js"
 const router = express.Router()
 
 router.post("/" ,autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), registrarLote)
 router.get("/" ,autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), buscarLotes)
 router.get("/search" ,autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), pesquisarLotes)
+router.get("/classificar" ,autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), listarLotesProximoVencimento)
 router.get("/:id" ,autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), buscarLotePorId)
 router.patch("/:id" ,autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), editarLote)
 router.delete("/:id" ,autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), eliminarlote)
