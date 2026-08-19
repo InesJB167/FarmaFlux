@@ -7,6 +7,7 @@ import localizacoesRoutes from "./src/modules/localizacoes/routes/localizacoes.r
 import medicamentosRoutes from "./src/modules/medicamento/routes/medicamentos.routes.js"
 import fornecedoresRoutes from "./src/modules/fornecedor/router/fornecedor.route.js"
 import lotesRoutes from "./src/modules/lote/routes/lotes.route.js"
+import barcodesRoutes from "./src/modules/barcodes/routes/barcodes.routes.js"
 
 //?"Primeiro fazemos funcionar. Depois fazemos funcionar direito. Só depois fazemos bonito."
 
@@ -37,6 +38,9 @@ app.use("/fornecedores" ,fornecedoresRoutes)
 
 //rota de lotes
 app.use("/lotes" ,lotesRoutes)
+
+//rota barcodes
+app.use("/barcodes" ,barcodesRoutes)
 
 export default app
 

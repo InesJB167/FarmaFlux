@@ -54,9 +54,10 @@ model medicamentos {
 }
 
 model barcodes {
-  id             Int    @id @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   medicamento_id Int
-  codigo         String @unique
+  codigo         String    @unique
+  deleted_at     DateTime?
 
   // Relações
   medicamentos medicamentos @relation(fields: [medicamento_id], references: [id])
