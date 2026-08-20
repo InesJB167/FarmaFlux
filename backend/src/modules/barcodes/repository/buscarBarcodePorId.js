@@ -9,6 +9,7 @@ export const buscarBarcodePorId = async (id)=>{
         select:{
             id: true,
             codigo: true,
+            medicamento_id: true,
             medicamentos:{
                 select:{
                     id: true,
