@@ -7,6 +7,7 @@ import { encontrarBarcodePorId } from "../controller/buscar-barcode-porId.contro
 import { listarBarcodesAtivos } from "../controller/listar-barcode.controller.js"
 import { encontrarBarcodePeloCodigo } from "../controller/buscar-barcode-peloCodigo.controller.js"
 import { editarBarcode } from "../controller/editar-barcode.controller.js"
+import { deletarBarcode } from "../controller/deletar-barcode.controller.js"
 const route = express.Router()
 
 route.post("/" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN","GERENTE"]), registrarBarcode)
@@ -17,5 +18,6 @@ route.get("/:id", autenticar,verificarUtilizadorAtivo,encontrarBarcodePorId)
 route.get("/", autenticar, verificarUtilizadorAtivo ,listarBarcodesAtivos)
 
 route.patch("/:id", autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]) ,editarBarcode)
+route.delete("/:id", autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]) ,deletarBarcode)
 
 export default route
