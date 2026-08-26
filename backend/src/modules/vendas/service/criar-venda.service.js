@@ -1,7 +1,7 @@
 import prisma from "../../../../prisma/prisma.js"
 import {buscarUtilizadorPorId} from "../../utilizador/repository/buscarUserPorId.js"
 
-export const criarVendaService = async (idUser) =>{
+export const criarVendaService = async (idUser, totalBruto,totalDesconto) =>{
     const encontrarUser = await buscarUtilizadorPorId(idUser)
     if(!encontrarUser) return{
         success: false,
@@ -11,7 +11,9 @@ export const criarVendaService = async (idUser) =>{
 
     const iniciarVenda = await prisma.vendas.create({
         data:{
-            utilizador_id: idUser
+            utilizador_id: idUser,
+            total_bruto: totalBruto,
+            total_desconto: totalDesconto
         }
     })
 
