@@ -8,9 +8,9 @@ export const buscarVendaPorId = async (req,res)=>{
 
         if(!verificarIdVenda) return res.status(400).json({message:"ID venda inválido."})
 
-        const enccontrarVenda = await buscarVendaPorIdService(idVenda)
+        const encontrarVenda = await buscarVendaPorIdService(idVenda)
 
-        return res.status(enccontrarVenda.status).json(enccontrarVenda)
+        return res.status(encontrarVenda.status).json(encontrarVenda)
 
     } catch (error) {
         console.log(error)
