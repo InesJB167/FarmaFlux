@@ -160,6 +160,7 @@ model vendas {
   total_desconto Decimal  @db.Decimal(15, 2)
   status         Status   @default(DRAFT)
   created_at     DateTime @default(now())
+  updated_at     DateTime?
 
   //Relações
   utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
