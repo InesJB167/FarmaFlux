@@ -1,25 +1,9 @@
-import prisma from "../../../../prisma/prisma.js"
+import { buscarUserPorUsername } from "../repository/buscarUserPorUsername.js"
 
 export const buscarUtilizadorPorNomeService = async (username)=>{
 
     try {
-        const utilizador = await prisma.utilizadores.findMany({
-        where:{
-            username:{
-                //encontra todos os registros semelhantes
-                contains: username
-            },
-            deleted_at: null
-        },
-        select:{
-            id: true,
-            nome: true,
-            username: true,
-            role: true,
-            status: true,
-            approved_at: true
-        }
-    })
+        const utilizador = await buscarUserPorUsername(username)
 
     if(!utilizador){
         return {

@@ -158,7 +158,7 @@ model vendas {
   data_hora      DateTime @default(now())
   total_bruto    Decimal  @db.Decimal(15, 2)
   total_desconto Decimal  @db.Decimal(15, 2)
-  status         Status   @default(COMPLETED)
+  status         Status   @default(DRAFT)
   created_at     DateTime @default(now())
 
   //Relações

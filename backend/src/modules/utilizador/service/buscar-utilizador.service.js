@@ -1,21 +1,8 @@
-import prisma from "../../../../prisma/prisma.js"
+import { buscarUtilizadorPorId } from "../repository/buscarUserPorId.js"
 
 export const buscarUtilizadorService = async (idUser) =>{
 
-    const buscarUtilizador = await prisma.utilizadores.findUnique({
-        where:{
-            id: idUser,
-            deleted_at: null
-        },
-        select:{
-            id: true,
-            nome: true,
-            username: true,
-            role: true,
-            status: true,
-            approved_at: true
-        }
-    })
+    const buscarUtilizador = await buscarUtilizadorPorId(idUser)
 
     if(!buscarUtilizador){
         console.log("user nao encontrado")
