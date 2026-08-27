@@ -1,5 +1,6 @@
 import prisma from "../../../../prisma/prisma.js"
 import { buscarVendaPorId } from "../repository/buscarVendaPorId.js"
+import { finalizarVendaService } from "./finalizar-venda.service.js"
 
 export const alterarStatusVendaService = async(idVenda,statusVenda)=>{
     const encontrarVenda = await buscarVendaPorId(idVenda)
@@ -26,17 +27,7 @@ export const alterarStatusVendaService = async(idVenda,statusVenda)=>{
     }
 
     if(statusVenda === "COMPLETED"){
-        /**
-         * Verificar se possui itens
-         * Encaminhar para validação dos itens/estoque
-         * Encaminhar para pagamento
-         * Aplicar FEFO
-         * Baixar estoque
-         * Alterar status para FINALIZADA
-         * Gerar comprovativo
-         */
-
-        const itensDaVenda = encontrarVenda
+        return await finalizarVendaService()
     }
 
     const alterarStatus = await prisma.vendas.update({

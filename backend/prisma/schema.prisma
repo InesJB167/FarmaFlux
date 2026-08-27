@@ -49,8 +49,9 @@ model medicamentos {
   categoria   categorias   @relation(fields: [categoria_id], references: [id])
   localizacao localizacoes @relation(fields: [localizacao_id], references: [id])
 
-  barcodes barcodes[]
-  lotes    lotes[]
+  barcodes    barcodes[]
+  lotes       lotes[]
+  itensVendas itens_venda[]
 }
 
 model barcodes {
@@ -95,7 +96,7 @@ model lotes {
   fornecedor  fornecedores @relation(fields: [fornecedor_id], references: [id])
   medicamento medicamentos @relation(fields: [medicamento_id], references: [id])
 
-  itens_venda itens_venda[]
+  itemRetiradoLotes item_retirado_lote[]
 }
 
 enum Role {
@@ -155,11 +156,11 @@ model vendas {
   //Foreign Keys
   utilizador_id Int
 
-  data_hora      DateTime @default(now())
-  total_bruto    Decimal  @db.Decimal(15, 2)
-  total_desconto Decimal  @db.Decimal(15, 2)
-  status         Status   @default(DRAFT)
-  created_at     DateTime @default(now())
+  data_hora      DateTime  @default(now())
+  total_bruto    Decimal   @db.Decimal(15, 2)
+  total_desconto Decimal   @db.Decimal(15, 2)
+  status         Status    @default(DRAFT)
+  created_at     DateTime  @default(now())
   updated_at     DateTime?
 
   //Relações
@@ -173,15 +174,29 @@ model itens_venda {
   id Int @id @default(autoincrement())
 
   //Foreign Keys
-  venda_id Int
-  lote_id  Int
+  venda_id       Int
+  medicamento_id Int
 
   quantidade     Int
   preco_unitario Decimal @db.Decimal(15, 2)
+  subtotal       Decimal @db.Decimal(15, 2)
 
   //Relações
-  venda vendas @relation(fields: [venda_id], references: [id])
-  lote  lotes  @relation(fields: [lote_id], references: [id])
+  venda       vendas       @relation(fields: [venda_id], references: [id])
+  medicamento medicamentos @relation(fields: [medicamento_id], references: [id])
+
+  itemRetiradoLotes item_retirado_lote[]
+}
+
+model item_retirado_lote {
+  id_lote       Int
+  id_item_venda Int
+  quantidade    Int
+
+  lote       lotes       @relation(fields: [id_lote], references: [id])
+  item_venda itens_venda @relation(fields: [id_item_venda], references: [id])
+
+  @@id([id_lote, id_item_venda])
 }
 
 enum Metodo {
