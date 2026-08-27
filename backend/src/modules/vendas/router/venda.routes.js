@@ -6,6 +6,7 @@ import { buscarVendaPorId } from "../controller/buscar-venda-porId.controller.js
 import { listarTodasVendas } from "../controller/listar-vendas.controller.js"
 import { alterarStatusVenda } from "../controller/alterar-status-venda.controller.js"
 import { registrarItensVenda } from "../../item-venda/controller/registrar-itens-venda.controller.js"
+import { listarItensVenda } from "../../item-venda/controller/listar-itens-venda.controller.js"
 const route = express.Router()
 
 route.post("/" ,autenticar, verificarUtilizadorAtivo,criarVenda)
@@ -15,5 +16,6 @@ route.patch("/:id" ,autenticar, verificarUtilizadorAtivo, alterarStatusVenda)
 
 //rotas para os itens da venda
 route.post("/:id/item" ,autenticar, verificarUtilizadorAtivo, registrarItensVenda)
+route.get("/:id/item" ,autenticar, verificarUtilizadorAtivo, listarItensVenda)
 
 export default route
