@@ -8,6 +8,7 @@ import { alterarStatusVenda } from "../controller/alterar-status-venda.controlle
 import { registrarItensVenda } from "../../item-venda/controller/registrar-itens-venda.controller.js"
 import { listarItensVenda } from "../../item-venda/controller/listar-itens-venda.controller.js"
 import { alterarQuantidadeItem } from "../../item-venda/controller/alterar-quantidade-iten.controller.js"
+import { removerItemDaVenda } from "../../item-venda/controller/remover-item-venda.controller.js"
 const route = express.Router()
 
 route.post("/" ,autenticar, verificarUtilizadorAtivo,criarVenda)
@@ -19,5 +20,6 @@ route.patch("/:id" ,autenticar, verificarUtilizadorAtivo, alterarStatusVenda)
 route.post("/:id/item" ,autenticar, verificarUtilizadorAtivo, registrarItensVenda)
 route.get("/:id/item" ,autenticar, verificarUtilizadorAtivo, listarItensVenda)
 route.patch("/:id/item/:idItem" ,autenticar, verificarUtilizadorAtivo, alterarQuantidadeItem)
+route.delete("/:id/item/:idItem" ,autenticar, verificarUtilizadorAtivo, removerItemDaVenda)
 
 export default route
