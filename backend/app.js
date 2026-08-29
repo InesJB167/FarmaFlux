@@ -9,8 +9,9 @@ import fornecedoresRoutes from "./src/modules/fornecedor/router/fornecedor.route
 import lotesRoutes from "./src/modules/lote/routes/lotes.route.js"
 import barcodesRoutes from "./src/modules/barcodes/routes/barcodes.routes.js"
 import vendasRoutes from "./src/modules/vendas/router/venda.routes.js"
+import stockRoutes from "./src/modules/stock/router/stock.route.js"
 
-//?"Primeiro fazemos funcionar. Depois fazemos funcionar direito. Só depois fazemos bonito."
+//!"Primeiro fazemos funcionar. Depois fazemos funcionar direito. Só depois fazemos bonito."
 
 const app = express()
 
@@ -45,6 +46,9 @@ app.use("/barcodes" ,barcodesRoutes)
 
 //rota vendas
 app.use("/venda" ,vendasRoutes)
+
+//rota para stock
+app.use("/stock" ,stockRoutes)
 
 export default app
 

@@ -1,0 +1,1 @@
+import {consultarStockTotalService} from "../service/consultar-stock-total.service.js"
