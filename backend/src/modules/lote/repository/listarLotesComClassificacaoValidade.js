@@ -16,21 +16,17 @@ export const listarLotesComClassificacaoValidade = async () => {
          */
 
         const dataAtual = new Date()
-        console.log("data atual ", dataAtual)
 
         const dataUmaSemanaAdiante = new Date(dataAtual)
         dataUmaSemanaAdiante.setDate(dataAtual.getDate() + 7)
-        console.log("uma semana depois ", dataUmaSemanaAdiante)
 
         const dataUmMesAdiante = new Date(dataAtual)
         dataUmMesAdiante.setMonth(dataAtual.getMonth() + 1)
-        console.log("um mes depois ", dataUmMesAdiante)
 
         let listaDeLotesClassificados = []
 
         for (let lote of listarLotes) {
             const dataValidade = lote.data_validade
-            console.log(" lote ", lote)
 
             let classificacao
 
