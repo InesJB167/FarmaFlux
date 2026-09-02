@@ -1,6 +1,18 @@
-/**
- * ?o stock total será constituido por todos os lotes registrados ,não deletados ,expirados ou não, por isso a nomeclatura "stock-total" 
- * *tem relevancia criar um stock que apresenta tbm os elementos expirados??
- * *como apresentar um stock total ??
- * *deve este ser apresentado tipo paracetamol xmedicamentos??isso ja somando o numero total de todos lotes, e isso pra cada medicamento??
- */
+import { listarTotalLotesNoStockPorMedicamento } from "../repository/listarTotalLotesNoStockPorMedicamento.js"
+
+export const consultarStockTotalService = async()=>{
+    const listarLotes = await listarTotalLotesNoStockPorMedicamento()
+
+    if(listarLotes.length <= 0) return{
+        success: true,
+        status: 200,
+        message: "Não existem lotes registrados no stock."
+    }
+
+    return{
+        success: true,
+        status: 200,
+        message: "Lotes no stock.",
+        data: listarLotes
+    }
+}
