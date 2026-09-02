@@ -10,7 +10,7 @@ export const verificarDisponibilidadeMedicamento = async(idMed)=>{
 
     if(lotesEncontrados.length === 0) {
         medicamentoDisponivel = false
-        return medicamentoDisponivel
+        return medicamentoDisponivel 
     }
 
     return medicamentoDisponivel
