@@ -1,6 +1,7 @@
 import { listarTotalLotesNoStockPorMedicamento } from "../repository/listarTotalLotesNoStockPorMedicamento.js"
 
 export const consultarStockTotalService = async()=>{
+    
     const listarLotes = await listarTotalLotesNoStockPorMedicamento()
 
     if(listarLotes.length <= 0) return{

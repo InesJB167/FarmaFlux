@@ -6,6 +6,7 @@ import { listarMedicamentosEmStock } from "../controller/listar-medicamentos-em-
 import { listarLotesPorMedicamentosNoStock } from "../controller/consultar-quantidade-medicamento-por-lote.controller.js"
 import { authorization } from "../../../middlewares/authorize.middleware.js"
 import { consultarStockTotal } from "../controller/consultar-stock-total.controller.js"
+import { consultarNivelDeMedicamentoNoStock } from "../controller/consultar-nivel-de-medicamentos-no-stock.controller.js"
 const route = express.Router()
 
 //lista os medicamentos disponiveis a venda e suas quantidades
@@ -16,6 +17,9 @@ route.get("/search", autenticar,verificarUtilizadorAtivo,listarLotesPorMedicamen
 
 //apresenta todos os lotes no stock ,vencidos e válidos
 route.get("/total", autenticar,verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]),consultarStockTotal)
+
+//apresenta os niveis de cada medicamento e suas quantidades
+route.get("/nivel", autenticar,verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]),consultarNivelDeMedicamentoNoStock)
 
 //consulta a quantidade de um determinado medicamento
 route.get("/:id", autenticar,verificarUtilizadorAtivo,consultarStockDeUmMedicamento)

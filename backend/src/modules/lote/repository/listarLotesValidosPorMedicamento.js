@@ -11,6 +11,7 @@ export const lotesValidosPorMedicamento = async(idMedicamento)=>{
             }
         }
 
+        
         return lotesValidos
     }
 

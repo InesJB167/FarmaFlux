@@ -1,5 +1,4 @@
-import { listarLotesComClassificacaoValidade } from "../../lote/repository/listarLotesComClassificacaoValidade.js"
-import { lotesValidosPorMedicamento } from "../../lote/repository/listarLotesValidos.js"
+import { lotesValidosPorMedicamento } from "../../lote/repository/listarLotesValidosPorMedicamento.js"
 import { buscarMedicamentoPorId } from "../../medicamento/repository/buscarMedicamentoPorId.js"
 
 export const listarQuantidadeMedicamentoDisponivelPorLote = async (idMedicamento)=>{
