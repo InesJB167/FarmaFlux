@@ -1,12 +1,15 @@
 import prisma from "../../../../prisma/prisma.js"
 
-export const efetuarBaixaDeStock = async (itensParaRetirar) =>
+export const efetuarBaixaDeStock = async () =>
 {
     /**
      * ?essa função vai baixar o stock assim que a venda é finalizada, retirando os itens dos lotes ,é ela que mexe na BD
      * ?ela vai receber os itens ja preparados pela outra funçao ...algo assim:
-     * *[
-        {idVenda: 1,
+     * *
+     */
+    const itensParaRetirar = [
+        {   idVenda: 1,
+            id: 1,
             idmed: 0,
             nome: "mm",
             lote: [
@@ -14,7 +17,8 @@ export const efetuarBaixaDeStock = async (itensParaRetirar) =>
                 { id: 10, quantidade: 4 }
             ]
         },
-        {idVenda: 1,
+        {   idVenda: 1,
+            id: 4,
             idmed: 15,
             nome: "mm",
             lote: [
@@ -22,13 +26,13 @@ export const efetuarBaixaDeStock = async (itensParaRetirar) =>
             ]
         }
     ]
-     */
     
     const lotesMovimentados = []
 
     await prisma.$transaction(async (tx) =>
     {
         for (let item of itensParaRetirar) {
+            const idItem = item.id
             const lotesParaRetirar = item.lote
             let lotesRetirados = []
 
@@ -68,6 +72,22 @@ export const efetuarBaixaDeStock = async (itensParaRetirar) =>
                                 }
                             },
                             qtd_atual: true
+                        }
+                    })
+
+                    await tx.item_retirado_lote.create({
+                        data:{
+                            lote:{
+                                connect:{
+                                    id: idLote
+                                }
+                            },
+                            item_venda:{
+                                connect:{
+                                    id: idItem
+                                }
+                            },
+                            quantidade: quantiaParaRetirar
                         }
                     })
 
