@@ -7,7 +7,11 @@ import { listarLotesPorMedicamentosNoStock } from "../controller/consultar-quant
 import { authorization } from "../../../middlewares/authorize.middleware.js"
 import { consultarStockTotal } from "../controller/consultar-stock-total.controller.js"
 import { consultarNivelDeMedicamentoNoStock } from "../controller/consultar-nivel-de-medicamentos-no-stock.controller.js"
+import { test } from "../logica-fefo/test.js"
 const route = express.Router()
+
+//rota para teste de funçao
+route.get("/test", test)
 
 //lista os medicamentos disponiveis a venda e suas quantidades
 route.get("/" ,autenticar,verificarUtilizadorAtivo,listarMedicamentosEmStock)
