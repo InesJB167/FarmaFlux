@@ -16,7 +16,12 @@ export const buscarVendaPorId = async (idVenda)=>{
             total_bruto: true,
             total_desconto: true,
             data_hora: true,
-            status: true
+            status: true,
+            _count:{
+                select:{
+                    pagamentos: true
+                }
+            }
         }
     })
 }

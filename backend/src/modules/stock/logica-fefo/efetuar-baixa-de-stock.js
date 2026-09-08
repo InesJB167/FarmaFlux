@@ -5,9 +5,7 @@ export const efetuarBaixaDeStock = async () =>
     /**
      * ?essa função vai baixar o stock assim que a venda é finalizada, retirando os itens dos lotes ,é ela que mexe na BD
      * ?ela vai receber os itens ja preparados pela outra funçao ...algo assim:
-     * *
-     */
-    const itensParaRetirar = [
+     * *const itensParaRetirar = [
         {   idVenda: 1,
             id: 1,
             idmed: 0,
@@ -26,6 +24,7 @@ export const efetuarBaixaDeStock = async () =>
             ]
         }
     ]
+    */
     
     const lotesMovimentados = []
 

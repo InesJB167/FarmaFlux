@@ -213,7 +213,7 @@ model pagamentos {
 
   metodo            Metodo   @default(DINHEIRO)
   valor_pago        Decimal  @db.Decimal(15, 2)
-  troco             Decimal  @db.Decimal(15, 2)
+  troco             Decimal?  @db.Decimal(15, 2)
   referencia_manual String?  @db.VarChar(100)
   created_at        DateTime @default(now())
 
