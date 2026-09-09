@@ -30,8 +30,8 @@ export const efetuarPagamentoService = async (idVenda, dadosPagamento, client = 
         message: "Não foi encontrado nemhum item nesta venda."
     }
 
-    const vendaPaga = verificarVenda._count.pagamentos
-    if (vendaPaga > 0) return {
+    const vendaPaga = verificarVenda.pagamentos
+    if (vendaPaga.length > 0) return {
         success: false,
         status: 409,
         message: "O pagamento desta venda ja foi efetuado."
@@ -77,6 +77,7 @@ export const efetuarPagamentoService = async (idVenda, dadosPagamento, client = 
     if (dadosPagamento.hasOwnProperty("referenciaManual")) {
         const referenciaManual = dadosPagamento.referenciaManual
         dadosParaRegistroPagamento.referencia_manual = referenciaManual
+        dadosParaRegistroPagamento.troco = 0
     }
 
     const registrarPagamento = await client.pagamentos.create({

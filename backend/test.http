@@ -1,0 +1,3 @@
+### Gerar comprovativo em PDF
+GET http://localhost:5000/venda/5/comprovativo/pdf/ 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywidXNlcm5hbWUiOiJub3ZhdG8iLCJyb2xlIjoiT1BFUkFET1IiLCJzdGF0dXMiOiJBVElWTyIsImlhdCI6MTc4ODk3MjE5NywiZXhwIjoxNzg5MDAwOTk3fQ.DHC10Rc-Gn_F3U_iLXlQTedXRTANfHeFh9yFMLMeLmA

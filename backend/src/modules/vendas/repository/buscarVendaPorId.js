@@ -17,11 +17,7 @@ export const buscarVendaPorId = async (idVenda, client = prisma)=>{
             total_desconto: true,
             data_hora: true,
             status: true,
-            _count:{
-                select:{
-                    pagamentos: true
-                }
-            }
+            pagamentos: true
         }
     })
 }

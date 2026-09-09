@@ -11,6 +11,8 @@ import { alterarQuantidadeItem } from "../../item-venda/controller/alterar-quant
 import { removerItemDaVenda } from "../../item-venda/controller/remover-item-venda.controller.js"
 import { efetuarPagamento } from "../../pagamento/controller/efetuar-pagamento.controller.js"
 import { finalizarVenda } from "../controller/finalizar-venda.controller.js"
+import { gerarComprovativoVenda } from "../controller/gerar-comprovativo-venda.controller.js"
+import { gerarArquivoPdfVenda } from "../controller/gerar-comprovativo-pdf.controller.js"
 const route = express.Router()
 
 route.post("/" ,autenticar, verificarUtilizadorAtivo,criarVenda)
@@ -28,5 +30,7 @@ route.delete("/:id/item/:idItem" ,autenticar, verificarUtilizadorAtivo, removerI
 route.post("/:id/pagamento/" ,autenticar, verificarUtilizadorAtivo, efetuarPagamento)
 
 route.post("/:id/finalizar" ,autenticar ,verificarUtilizadorAtivo, finalizarVenda)
+route.post("/:id/comprovativo" ,autenticar ,verificarUtilizadorAtivo, gerarComprovativoVenda)
+route.get("/:id/comprovativo/pdf/" ,autenticar ,verificarUtilizadorAtivo, gerarArquivoPdfVenda)
 
 export default route
