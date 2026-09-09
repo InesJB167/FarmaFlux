@@ -1,7 +1,7 @@
 import { listarLotesComClassificacaoValidade } from "./listarLotesComClassificacaoValidade.js";
 
-export const listarLotesClassificadosPorMedicamento = async(idMedicamento) =>{
-    const lotesClassificados = await listarLotesComClassificacaoValidade()
+export const listarLotesClassificadosPorMedicamento = async(idMedicamento, client = prisma) =>{
+    const lotesClassificados = await listarLotesComClassificacaoValidade(client)
     const lotesDoMedicamento = []
 
     for(let loteListado of lotesClassificados){

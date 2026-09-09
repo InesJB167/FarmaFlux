@@ -1,8 +1,8 @@
 import prisma from "../../../../prisma/prisma.js"
-import { buscarTodosItensDeUmaVenda } from "../../vendas/repository/buscarTodosItensdaVenda.js"
+import { buscarSubtotaisDosItensDeUmaVenda } from "../../vendas/repository/buscarSubtotaisDosItensdaVenda.js"
 import { buscarVendaPorId } from "../../vendas/repository/buscarVendaPorId.js"
 
-export const efetuarPagamentoService = async (idVenda, dadosPagamento) =>
+export const efetuarPagamentoService = async (idVenda, dadosPagamento, client = prisma) =>
 {
     /**
      * ?essa funçao será responsavel por realizar o pagamento, ela vai receber os dados para tal de modo a garantir que o mesmo seja feito.
@@ -10,7 +10,7 @@ export const efetuarPagamentoService = async (idVenda, dadosPagamento) =>
      * ?de lembrar que o pagamento será unico para uma unica venda, por isso será feito um calculo  do  valor total da venda para ser pago de uma so vez.
      */
 
-    const verificarVenda = await buscarVendaPorId(idVenda)
+    const verificarVenda = await buscarVendaPorId(idVenda, client)
     if (!verificarVenda) return {
         success: false,
         status: 404,
@@ -23,7 +23,7 @@ export const efetuarPagamentoService = async (idVenda, dadosPagamento) =>
         message: "Esta venda não pode ser paga neste estado."
     }
 
-    const buscarItensDaVenda = await buscarTodosItensDeUmaVenda(idVenda)
+    const buscarItensDaVenda = await buscarSubtotaisDosItensDeUmaVenda(idVenda, client)
     if (!buscarItensDaVenda) return {
         success: false,
         status: 404,
@@ -44,7 +44,7 @@ export const efetuarPagamentoService = async (idVenda, dadosPagamento) =>
         const subtotal = Number(item.subtotal)
         totalApagar += subtotal
     }
-   
+
 
     const metodoPagamento = dadosPagamento.metodo
     //?o valor dado pelo cliente na venda
@@ -79,41 +79,37 @@ export const efetuarPagamentoService = async (idVenda, dadosPagamento) =>
         dadosParaRegistroPagamento.referencia_manual = referenciaManual
     }
 
-    const efetuarPagamento = await prisma.$transaction(async (tx) =>
-    {
-        const registrarPagamento = await tx.pagamentos.create({
-            data: {
-                venda: {
-                    connect: {
-                        id: idVenda
-                    }
-                },
-                ...dadosParaRegistroPagamento
-            }
-        })
-
-        const dadosParaRegistroNaVenda = {
-            total_bruto: totalApagar
-        }
-
-        const registrarPagamentoNaVenda = await tx.vendas.update({
-            where: {
-                id: idVenda
+    const registrarPagamento = await client.pagamentos.create({
+        data: {
+            venda: {
+                connect: {
+                    id: idVenda
+                }
             },
-            data: {
-                ...dadosParaRegistroNaVenda,
-                updated_at: new Date()
-            }
-        })
-
-
-        return {
-            success: true,
-            status: 201,
-            message: "Pagamento efetuado.",
-            data: registrarPagamento
+            ...dadosParaRegistroPagamento
         }
     })
 
-    return efetuarPagamento
+    const dadosParaRegistroNaVenda = {
+        total_bruto: totalApagar
+    }
+
+    const registrarPagamentoNaVenda = await client.vendas.update({
+        where: {
+            id: idVenda
+        },
+        data: {
+            ...dadosParaRegistroNaVenda,
+            updated_at: new Date()
+        }
+    })
+
+
+    return {
+        success: true,
+        status: 201,
+        message: "Pagamento efetuado.",
+        data: registrarPagamento
+    }
+
 }

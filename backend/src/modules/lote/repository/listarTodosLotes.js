@@ -1,7 +1,7 @@
 import prisma from "../../../../prisma/prisma.js"
 
-export const listarTodosLotes = async()=>{
-    return await prisma.lotes.findMany({
+export const listarTodosLotes = async(client = prisma)=>{
+    return await client.lotes.findMany({
         where:{
             deleted_at: null
         },

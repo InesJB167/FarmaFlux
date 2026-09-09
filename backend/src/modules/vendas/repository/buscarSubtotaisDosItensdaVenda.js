@@ -1,10 +1,10 @@
 import prisma from "../../../../prisma/prisma.js"
 
-export const buscarTodosItensDeUmaVenda = async(idVenda)=>{
+export const buscarSubtotaisDosItensDeUmaVenda = async(idVenda, client = prisma)=>{
     /**
      * ?esta funçao limita-se a apresentar os subtotais dos itens da venda
      */
-    return await prisma.vendas.findUnique({
+    return await client.vendas.findUnique({
         where: {
             id: idVenda,
             status: "DRAFT"

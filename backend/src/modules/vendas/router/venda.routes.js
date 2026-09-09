@@ -10,6 +10,7 @@ import { listarItensVenda } from "../../item-venda/controller/listar-itens-venda
 import { alterarQuantidadeItem } from "../../item-venda/controller/alterar-quantidade-iten.controller.js"
 import { removerItemDaVenda } from "../../item-venda/controller/remover-item-venda.controller.js"
 import { efetuarPagamento } from "../../pagamento/controller/efetuar-pagamento.controller.js"
+import { finalizarVenda } from "../controller/finalizar-venda.controller.js"
 const route = express.Router()
 
 route.post("/" ,autenticar, verificarUtilizadorAtivo,criarVenda)
@@ -25,5 +26,7 @@ route.delete("/:id/item/:idItem" ,autenticar, verificarUtilizadorAtivo, removerI
 
 //rota para o pagamento
 route.post("/:id/pagamento/" ,autenticar, verificarUtilizadorAtivo, efetuarPagamento)
+
+route.post("/:id/finalizar" ,autenticar ,verificarUtilizadorAtivo, finalizarVenda)
 
 export default route

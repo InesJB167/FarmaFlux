@@ -1,7 +1,7 @@
 import prisma from "../../../../prisma/prisma.js";
 
-export const buscarVendaPorId = async (idVenda)=>{
-    return await prisma.vendas.findUnique({
+export const buscarVendaPorId = async (idVenda, client = prisma)=>{
+    return await client.vendas.findUnique({
         where:{
             id: idVenda
         },

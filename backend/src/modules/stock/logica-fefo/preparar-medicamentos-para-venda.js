@@ -1,44 +1,33 @@
 import { lotesValidosPorMedicamento } from "../../lote/repository/listarLotesValidosPorMedicamento.js";
-import { buscarMedicamentoPorId } from "../../medicamento/repository/buscarMedicamentoPorId.js";
+import prisma from "../../../../prisma/prisma.js";
 
-export const prepararMedicamentosParaVenda = async(itensVenda)=>{
+export const prepararMedicamentosParaVenda = async(itensVenda, client = prisma)=>{
     /**
      * ?esta função vai preparar a retirada dos medicamentos no momento da venda ,vai buscar os lotes que ja estão perto do vencimento(lógica FEFO) e preparar os "possiveis medicamentos" que serão vendidos.
-     * *por onde começar??
-     * *ela deve ter a noçao dos itens da venda para saber quais medicamentos devem ser procurados 
-     * *os itensVenda deve ter [{idVenda:1,idMedicamento:0,quantidade:7},{idVenda:1,idMedicamento:15,quantidade: 15}]
-     * *como pegar a quantia pra cada item ??
-     * *penso que a deve-se percorrer o array e pra cada item pegar a quantidade requerida a seguir buscar os lotes validos daquele medicamento ,pegue o lote verifique a quantidade se for suficiente adicione a quantia prevista senao passa pra o proximo e a mesma coisa
-     * *caso o lote nao forneça a quantia devida ,o que fazer??
-     * *pegue do lote a seguir
-     * *o que essa funçao vai retornar??
-     * *essa função deve retornar pra cada item o/os lote/s que onde cada item vai ser retirado, pode ser algo assim:
-     * *[{idVenda:1,
-     * *idMedicamento:0,
-     * *quantidade:10,
-     * *lotes:[{idlote:1,quantia:7},{idlote:2,quantia:3}]}]
+     * 
      */
    
     const itensParaVenda = []
     
     for(let item of itensVenda){
 
-        const idVenda = item.idVenda
-        const idMedicamento = item.idMedicamento
-        const encontrarMedicamento = await buscarMedicamentoPorId(idMedicamento)
-        const nomeMedicamento = encontrarMedicamento.nome
+        const idItem = item.id
+        const idVenda = item.venda_id
+        const idMedicamento = item.medicamento.id
+        const nomeMedicamento = item.medicamento.nome
         const quantidadeRequerida = item.quantidade 
 
         const lotesParaRetirada = []
         
         let novoItem = {
+            id: idItem,
             idVenda: idVenda,
             idMed: idMedicamento,
             nome: nomeMedicamento,
             quantia: quantidadeRequerida,
         }
 
-        const encontrarLotes = await lotesValidosPorMedicamento(idMedicamento)
+        const encontrarLotes = await lotesValidosPorMedicamento(idMedicamento,client)
         if(encontrarLotes.length > 0){
             let quantidadePrevista
             let quantiaFaltando = 0
@@ -81,6 +70,8 @@ export const prepararMedicamentosParaVenda = async(itensVenda)=>{
                 novoItem.lotes = lotesParaRetirada
                 break
             }
+        } else {
+            throw new Error(`Nenhum lote de ${nomeMedicamento} foi encontrado.`)
         }
         
         itensParaVenda.push(novoItem)

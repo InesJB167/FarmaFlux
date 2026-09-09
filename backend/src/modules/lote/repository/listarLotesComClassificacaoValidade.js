@@ -1,7 +1,7 @@
 import { listarTodosLotes } from "./listarTodosLotes.js"
 
-export const listarLotesComClassificacaoValidade = async () => {
-    const listarLotes = await listarTodosLotes()
+export const listarLotesComClassificacaoValidade = async (client = prisma) => {
+    const listarLotes = await listarTodosLotes(client)
     if (listarLotes.length > 0) {
 
         /**
