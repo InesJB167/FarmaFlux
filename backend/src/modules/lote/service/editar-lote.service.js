@@ -6,7 +6,8 @@ import { buscarMedicamentoPorId } from "../../medicamento/repository/buscarMedic
 import { buscarFornecedorPorId } from "../../fornecedor/repository/buscarFornecedorPorId.js"
 import { buscarFornecedorPorNif } from "../../fornecedor/repository/buscarFornecedorPorNif.js"
 
-export const editarLoteService = async (idLote, dadosModificados) => {
+export const editarLoteService = async (idLote, dadosModificados, idUser) =>
+{
     const buscarLote = await buscarLotePorId(idLote)
 
     if (!buscarLote) return {
@@ -28,19 +29,9 @@ export const editarLoteService = async (idLote, dadosModificados) => {
         preco_custo: dadosModificados.preco_custo ?? buscarLote.preco_custo
     }
 
-    console.log("dados novos ", dadosNovos)
 
     let medicamento_id = buscarLote.medicamento.id
     let fornecedor_id = buscarLote.fornecedor.id
-    console.log("nif do fornecedor atual ",fornecedor_id)
-    
-    /**
-     * !o problema é para manter o id fornecedor e medicamento caso eles não sejam atualizados tem isso ai em cima ...assim no update de outra coisa eles permanecem mas o prisma nao aceita a atribuicao de uma fk assim precisa ser pelo relacionamento. Ou seja os fks nao podem ser passados pelo mesmo objecto que os dados normais.COMO RESOLVER??
-     * *E se eu manter os dados normais sendo passados em um unnico objecto e cada fk em uma variavel separada??
-     * *Mas como garantir que elas permaneçam intactas caso a atualizacao seja de outro atributo ??
-     * *será que elas podem desaparecer no meio do processo ??
-     * ?posso criar uma variavel que vai receber as fks vindo diretamente do lote encontrado depois mudo elas caso haja um update ..isso pode impedir que sejam apagadas caso nao haja muudanças.
-     */
 
     if (dadosModificados.hasOwnProperty("medicamento_id")) {
         const encontrarMedicamento = await buscarMedicamentoPorId(dadosModificados.medicamento_id)
@@ -83,9 +74,7 @@ export const editarLoteService = async (idLote, dadosModificados) => {
                 message: "Não foi encontrado nenhum fornecedor com este NIF."
             }
         } else {
-            console.log("fornecedor encontrado ",encontrarNifFornecedor)
             fornecedor_id = encontrarNifFornecedor.id
-            console.log("id do fornecedor apos a troca do nif ",fornecedor_id," nif encontrado ", nif)
             dadosNovos.nif_fornecedor = nif
         }
     }
@@ -115,6 +104,74 @@ export const editarLoteService = async (idLote, dadosModificados) => {
     }
 
     const dadosIguais = comparandoObjectos(dadosNovos, buscarLote)
+
+    if (dadosNovos.hasOwnProperty("qtd_atual") && dadosNovos.qtd_atual !== buscarLote.qtd_atual) {
+        const editarStock = await prisma.$transaction(async (tx) =>
+        {
+            const editarLoteComAuditoria = await tx.lotes.update({
+                where: {
+                    id: idLote
+                },
+                data: {
+                    medicamento: {
+                        connect: {
+                            id: medicamento_id
+                        }
+                    },
+                    fornecedor: {
+                        connect: {
+                            id: fornecedor_id
+                        }
+                    },
+                    ...dadosNovos
+                },
+                select: {
+                    id: true,
+                    numero_lote: true,
+                    medicamento: {
+                        select: {
+                            id: true,
+                            nome: true
+                        }
+                    },
+                    fornecedor: {
+                        select: {
+                            id: true,
+                            nome_empresa: true,
+                            nif: true
+                        }
+                    },
+                    qtd_inicial: true,
+                    qtd_atual: true,
+                    preco_custo: true,
+                    data_entrada: true,
+                    data_validade: true
+                }
+            })
+
+            const dadosLogAditoria = {
+                utilizador_id: idUser,
+                acao: "AJUSTE_STOCK",
+                tabela: "lotes",
+                id_registro: idLote,
+                valor_antigo: buscarLote.qtd_atual,
+                valor_novo: editarLoteComAuditoria.qtd_atual
+            }
+
+            const registrarLog = await tx.logs_auditoria.create({
+                data: {
+                    ...dadosLogAditoria
+                }
+            })
+        })
+
+        return {
+            success: true,
+            status: 200,
+            message: "Dados editados com sucesso.",
+            data: editarStock
+        }
+    }
 
     if (dadosIguais) return {
         success: false,

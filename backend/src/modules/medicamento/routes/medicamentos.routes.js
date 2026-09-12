@@ -7,13 +7,14 @@ import { buscarMedicamentoPorId } from "../controller/buscar-medicamento-porId.c
 import { pesquisandoMedicamentos } from "../controller/pesquisar-medicamentoPor.controller.js"
 import { atualizarMedicamento } from "../controller/atualizar-medicamento.controller.js"
 import { deletarMedicamento } from "../controller/deletar-medicamento.controller.js"
+import { authorization } from "../../../middlewares/authorize.middleware.js"
 const router = express.Router()
 
 router.post("/" ,autenticar, verificarUtilizadorAtivo, registrarMedicamento)
 router.get("/" ,autenticar, verificarUtilizadorAtivo, listarMedicamentos)
 router.get("/search" ,autenticar, verificarUtilizadorAtivo, pesquisandoMedicamentos)
 router.get("/:id" ,autenticar, verificarUtilizadorAtivo, buscarMedicamentoPorId)
-router.patch("/:id" ,autenticar , verificarUtilizadorAtivo, atualizarMedicamento)
-router.delete("/:id" ,autenticar, verificarUtilizadorAtivo, deletarMedicamento)
+router.patch("/:id" ,autenticar , verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]), atualizarMedicamento)
+router.delete("/:id" ,autenticar, verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]), deletarMedicamento)
 
 export default router

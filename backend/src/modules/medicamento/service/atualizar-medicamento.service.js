@@ -2,8 +2,10 @@ import prisma from "../../../../prisma/prisma.js"
 import { buscarMedicamentoPorId } from "../repository/buscarMedicamentoPorId.js"
 import { buscarCategoriaPorId } from "../../categoria/repository/buscar-categoria-porId.js"
 import { buscarLocalizacaoPorId } from "../../localizacoes/repository/buscar-localizacoesPorId.js"
+import { registrarLog } from "../../logs-auditoria/registrar-log.js"
 
-export const atualizarMedicamentoService = async (medicamento_id, dadosNovos) => {
+export const atualizarMedicamentoService = async (medicamento_id, dadosNovos,utilizadorId) =>
+{
     const buscarMedicamento = await buscarMedicamentoPorId(medicamento_id)
 
     if (!buscarMedicamento) return {
@@ -59,17 +61,40 @@ export const atualizarMedicamentoService = async (medicamento_id, dadosNovos) =>
         }
     }
 
-    const atualizarMedicamento = await prisma.medicamentos.update({
-        where: {
-            id: medicamento_id
-        },
-        data: dadosConfirmados
+    const realizarAtualizacao = prisma.$transaction(async (tx) =>
+    {
+        const atualizarMedicamento = await tx.medicamentos.update({
+            where: {
+                id: medicamento_id
+            },
+            data: dadosConfirmados
+        })
+
+        let acao = "UPDATE"
+
+        if(dadosConfirmados.preco_venda !== buscarMedicamento.preco_venda){
+            acao = "ALTERAR_PRECO"
+        }
+
+        const dadosParaLog = {
+            utilizador_id: utilizadorId,
+            acao: acao,
+            tabela: "medicamentos",
+            id_registro: medicamento_id,
+            valor_antigo: buscarMedicamento.preco_venda,
+            valor_novo: atualizarMedicamento.preco_venda
+        }
+
+        const logAuditoria = await registrarLog(dadosParaLog, tx)
+
+        return {
+            success: true,
+            status: 200,
+            message: "Dados atualizados.",
+            data: atualizarMedicamento
+        }
     })
 
-    return {
-        success: true,
-        status: 200,
-        message: "Dados atualizados.",
-        data: atualizarMedicamento
-    }
+    return realizarAtualizacao
+
 }

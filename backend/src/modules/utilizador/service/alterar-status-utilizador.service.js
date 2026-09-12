@@ -40,6 +40,8 @@ export const alterarStatusUtilizadorService = async (idUser, idAdmin) => {
             }
         })
 
+        
+
         if(!alterarStatus){
             return {
                 success: false,

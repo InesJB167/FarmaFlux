@@ -3,6 +3,7 @@ import { atualizarMedicamentoService } from "../service/atualizar-medicamento.se
 
 export const atualizarMedicamento = async (req, res) => {
     try {
+        const utilizadorId = req.user.id
         const id = Number(req.params.id) 
         const nome = req.body.nome?.trim()
         const principio_ativo = req.body.principio_ativo?.trim()
@@ -51,7 +52,7 @@ export const atualizarMedicamento = async (req, res) => {
         }
         
 
-        const atualizar = await atualizarMedicamentoService(id,dadosNovos)
+        const atualizar = await atualizarMedicamentoService(id,dadosNovos,utilizadorId)
         if(!atualizar.success) return res.status(atualizar.status).json(atualizar)
 
         return res.json(atualizar)

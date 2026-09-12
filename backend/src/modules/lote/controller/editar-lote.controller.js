@@ -3,6 +3,7 @@ import { editarLoteService } from "../service/editar-lote.service.js"
 
 export const editarLote = async (req, res) => {
     try {
+        const idUser = req.user.id
         const id = Number(req.params.id)
         const verificarIdLote = validarId(id)
 
@@ -76,7 +77,7 @@ export const editarLote = async (req, res) => {
             }
         }
 
-        const editandoLote = await editarLoteService(id,dadosEditados)
+        const editandoLote = await editarLoteService(id,dadosEditados,idUser)
 
         if(!editandoLote.success) return res.status(editandoLote.status).json(editandoLote)
 

@@ -3,20 +3,20 @@ import {alterarStatusVendaService} from "../service/alterar-status-venda.service
 
 export const alterarStatusVenda = async(req,res)=>{
     try {
-
+        const utilizadorId = req.user.id
         const idVenda = Number(req.params.id)
         const verificarIdVenda = validarId(idVenda)
 
         if(!verificarIdVenda) return res.status(400).json({message: "ID venda inválido."})
 
-        const statusVenda = ["PARKED","DRAFT","COMPLETED","CANCELLED"]
+        const statusVenda = ["PARKED","DRAFT","CANCELLED"]
         const novoStatus = req.body.novoStatus?.trim()
 
         if(!novoStatus || !statusVenda.includes(novoStatus)) {
             return res.status(400).json({message: "Status venda inválido."})
         }
 
-        const mudandoStatus = await alterarStatusVendaService(idVenda,novoStatus)
+        const mudandoStatus = await alterarStatusVendaService(idVenda,novoStatus,utilizadorId)
 
         return res.status(mudandoStatus.status).json(mudandoStatus)
 
