@@ -1,11 +1,13 @@
 import prisma from "../../../../prisma/prisma.js"
+import { gerarCodigoFaturaService } from "../../faturacao/codigo-fatura/service/gerarCodigoFatura.service.js"
 import { listarItensVenda } from "../../item-venda/repository/listarItensVenda.js"
 import { efetuarPagamentoService } from "../../pagamento/service/efetuar-pagamento.service.js"
 import { efetuarBaixaDeStock } from "../../stock/logica-fefo/efetuar-baixa-de-stock.js"
 import { prepararMedicamentosParaVenda } from "../../stock/logica-fefo/preparar-medicamentos-para-venda.js"
 import { buscarVendaPorId } from "../repository/buscarVendaPorId.js"
 
-export const finalizarVendaService = async (idVenda, dadosPagamento) =>{
+export const finalizarVendaService = async (idVenda, dadosPagamento) =>
+{
     /**
      * ?esta funçao vai fechar o ciclo da venda ou seja vai finalizar a venda.
     */
@@ -46,27 +48,30 @@ export const finalizarVendaService = async (idVenda, dadosPagamento) =>{
 
         const retiradaDosItensNoStock = await efetuarBaixaDeStock(itensParaRetirada, tx)
 
-            const mudarStatusVenda = await tx.vendas.update({
-                where: {
-                    id: idVenda
-                },
-                data: {
-                    status: "COMPLETED"
-                },
-                select:{
-                    id: true,
-                    total_bruto: true,
-                    total_desconto: true,
-                    status: true
-                }
-            })
+        const gerarCodigoFatura = await gerarCodigoFaturaService(idVenda, tx)
+        if(!gerarCodigoFatura.success) return gerarCodigoFatura
 
-            return {
-                success: true,
-                status: 200,
-                message: "Venda Finalizada.",
-                data: mudarStatusVenda
+        const mudarStatusVenda = await tx.vendas.update({
+            where: {
+                id: idVenda
+            },
+            data: {
+                status: "COMPLETED"
+            },
+            select: {
+                id: true,
+                total_bruto: true,
+                total_desconto: true,
+                status: true
             }
+        })
+
+        return {
+            success: true,
+            status: 200,
+            message: "Venda Finalizada.",
+            data: mudarStatusVenda
+        }
 
     })
 

@@ -11,6 +11,8 @@ import barcodesRoutes from "./src/modules/barcodes/routes/barcodes.routes.js"
 import vendasRoutes from "./src/modules/vendas/router/venda.routes.js"
 import stockRoutes from "./src/modules/stock/router/stock.route.js"
 
+import test from "./src/modules/faturacao/codigo-fatura/service/test.route.js"
+
 //!"Primeiro fazemos funcionar. Depois fazemos funcionar direito. Só depois fazemos bonito."
 
 const app = express()
@@ -19,6 +21,7 @@ app.use(cors())
 app.use(express.json())
 
 //rotas do sistema
+app.use("/test", test)
 
 //para autenticação
 app.use("/auth" ,authRoutes)

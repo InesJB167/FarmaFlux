@@ -44,10 +44,12 @@ model medicamentos {
   // Foreign Keys
   categoria_id   Int
   localizacao_id Int
+  taxa_iva_id    Int
 
   // Relações
   categoria   categorias   @relation(fields: [categoria_id], references: [id])
   localizacao localizacoes @relation(fields: [localizacao_id], references: [id])
+  taxas_ivas  taxas_iva    @relation(fields: [taxa_iva_id], references: [id])
 
   barcodes    barcodes[]
   lotes       lotes[]
@@ -155,6 +157,7 @@ model vendas {
 
   //Foreign Keys
   utilizador_id Int
+  cliente_id    Int
 
   data_hora      DateTime  @default(now())
   total_bruto    Decimal   @db.Decimal(15, 2)
@@ -165,9 +168,13 @@ model vendas {
 
   //Relações
   utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
+  cliente    clientes     @relation(fields: [cliente_id], references: [id])
 
-  itens_venda itens_venda[]
-  pagamentos  pagamentos[]
+  itens_venda   itens_venda[]
+  pagamentos    pagamentos[]
+  notas_credito notas_credito[]
+
+  fatura fatura?
 }
 
 model itens_venda {
@@ -213,7 +220,7 @@ model pagamentos {
 
   metodo            Metodo   @default(DINHEIRO)
   valor_pago        Decimal  @db.Decimal(15, 2)
-  troco             Decimal?  @db.Decimal(15, 2)
+  troco             Decimal? @db.Decimal(15, 2)
   referencia_manual String?  @db.VarChar(100)
   created_at        DateTime @default(now())
 
@@ -247,4 +254,60 @@ model logs_auditoria {
 
   //Relações
   utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
+}
+
+model farmacia {
+  id                          Int    @id @default(autoincrement())
+  nif                         String @db.VarChar(20)
+  razao_social                String
+  nome_comercial              String @db.VarChar(100)
+  morada                      String @db.VarChar(100)
+  telefone                    String @db.VarChar(100)
+  numero_certificado_software String
+}
+
+model clientes {
+  id       Int      @id @default(autoincrement())
+  nif      String   @unique @db.VarChar(20)
+  nome     String   @db.VarChar(200)
+  endereco String?
+  vendas   vendas[]
+}
+
+model taxas_iva {
+  id                     Int            @id @default(autoincrement())
+  codigo_legal           String
+  percentagem            Decimal        @db.Decimal(5, 2)
+  motivo_de_insercao_iva String
+  medicamentos           medicamentos[]
+}
+
+model notas_credito {
+  id Int @id @default(autoincrement())
+
+  venda_id Int
+
+  motivo            String
+  valor_anulado     Decimal  @db.Decimal(15, 2)
+  numero_sequencial String   @unique
+  data_emissao      DateTime @default(now())
+
+  venda vendas @relation(fields: [venda_id], references: [id])
+}
+
+model fatura {
+  id            Int    @id @default(autoincrement())
+  codigo_fatura String @unique
+  serie         String
+  ano           Int
+  sequencial    Int
+
+  venda_id Int    @unique
+  venda    vendas @relation(fields: [venda_id], references: [id])
+
+  hash_assinatura String?
+  hash_anterior   String?
+  created_at      DateTime @default(now())
+
+  @@unique([serie, ano, sequencial])
 }
