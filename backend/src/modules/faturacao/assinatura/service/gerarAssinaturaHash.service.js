@@ -1,13 +1,12 @@
 import { buscarFaturaPorId } from "../../codigo-fatura/repository/buscarFaturaPorId.js"
 import crypto from "crypto"
 import prisma from "../../../../../prisma/prisma.js"
-import { buscarUltimaFatura } from "../../codigo-fatura/repository/buscarUltimaFatura.js"
 
-export const gerarAssinaturaHashDeFatura = async (idFatura, dadosVenda) =>
+export const gerarAssinaturaHashDeFatura = async (idFatura, dadosVenda, client = prisma) =>
 {
     //?essa função vai gerar a assinatura hash de uma fatura para garantir a integridade da mesma, o hash vai ser composto pelos dados da venda e o hash da fatura anterior.
 
-    const fatura = await buscarFaturaPorId(idFatura)
+    const fatura = await buscarFaturaPorId(idFatura, client)
     if (!fatura) return {
         success: false,
         status: 404,
@@ -21,17 +20,13 @@ export const gerarAssinaturaHashDeFatura = async (idFatura, dadosVenda) =>
         message: "Essa fatura ja possui assinatura."
     }
 
-    if (dadosVenda) {
-
-    }
-
     let hashAssinatura
     const stringDadosVenda = JSON.stringify(Object.values(dadosVenda))
     let dadosHash
 
     let faturaAnteriorId = fatura.id - 1
     if (faturaAnteriorId > 0) {
-        const faturaAnterior = await buscarFaturaPorId(faturaAnteriorId)
+        const faturaAnterior = await buscarFaturaPorId(faturaAnteriorId, client)
         if (faturaAnterior) {
             console.log("fatura anterior 2", faturaAnterior)
             const hashAnterior = faturaAnterior.hash_assinatura
@@ -55,7 +50,7 @@ export const gerarAssinaturaHashDeFatura = async (idFatura, dadosVenda) =>
 
     console.log("dados para registrar assinatura ", dadosHash)
 
-    const registrarHashAsssintura = await prisma.fatura.update({
+    const registrarHashAsssintura = await client.fatura.update({
         where: {
             id: idFatura
         },
@@ -70,6 +65,4 @@ export const gerarAssinaturaHashDeFatura = async (idFatura, dadosVenda) =>
         message: "Assinatura da fatura gerada com sucesso. ",
         data: registrarHashAsssintura
     }
-
-
 }

@@ -1,4 +1,5 @@
 import prisma from "../../../../prisma/prisma.js"
+import { gerarAssinaturaHashDeFatura } from "../../faturacao/assinatura/service/gerarAssinaturaHash.service.js"
 import { gerarCodigoFaturaService } from "../../faturacao/codigo-fatura/service/gerarCodigoFatura.service.js"
 import { listarItensVenda } from "../../item-venda/repository/listarItensVenda.js"
 import { efetuarPagamentoService } from "../../pagamento/service/efetuar-pagamento.service.js"
@@ -55,6 +56,8 @@ export const finalizarVendaService = async (idVenda, dadosPagamento) =>
 
         const gerarCodigoFatura = await gerarCodigoFaturaService(idVenda, tx)
         if(!gerarCodigoFatura.success) return gerarCodigoFatura
+
+        const gerarAssinatura = await gerarAssinaturaHashDeFatura(idVenda,tx)
 
         const mudarStatusVenda = await tx.vendas.update({
             where: {
