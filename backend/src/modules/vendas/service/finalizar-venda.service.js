@@ -32,6 +32,11 @@ export const finalizarVendaService = async (idVenda, dadosPagamento) =>
         message: "Venda sem itens."
     }
 
+    //?foi implementado os dados da venda pra poder gerar o hash de assinatura
+    const dadosVenda = {
+        id: idVenda
+    }
+
     const finalizarVenda = await prisma.$transaction(async (tx) =>
     {
         const itensParaRetirada = await prepararMedicamentosParaVenda(itensDaVenda, tx)

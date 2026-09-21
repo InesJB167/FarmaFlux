@@ -66,6 +66,7 @@ export const gerarCodigoFaturaService = async (vendaId ,client = prisma) =>
         }
     })
 
+    console.log("Fatura gerada ",registrarCodigoFatura.codigo_fatura)
     return{
         success: true,
         status: 201,

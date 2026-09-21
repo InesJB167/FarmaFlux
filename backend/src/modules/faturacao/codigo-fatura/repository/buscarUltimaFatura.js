@@ -1,6 +1,6 @@
 import prisma from "../../../../../prisma/prisma.js"
 
-export const bucarUltimaFatura = async()=>{
+export const buscarUltimaFatura = async()=>{
     return await prisma.fatura.findMany({
         orderBy:{
             created_at: "desc"
