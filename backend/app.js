@@ -10,6 +10,7 @@ import lotesRoutes from "./src/modules/lote/routes/lotes.route.js"
 import barcodesRoutes from "./src/modules/barcodes/routes/barcodes.routes.js"
 import vendasRoutes from "./src/modules/vendas/router/venda.routes.js"
 import stockRoutes from "./src/modules/stock/router/stock.route.js"
+import notasCreditoRoutes from "./src/modules/faturacao/nota-credito/router/nota-credito.route.js"
 
 import test from "./src/modules/faturacao/codigo-fatura/service/test.route.js"
 
@@ -52,6 +53,9 @@ app.use("/venda" ,vendasRoutes)
 
 //rota para stock
 app.use("/stock" ,stockRoutes)
+
+//rota para notas crédito
+app.use("/nota-credito", notasCreditoRoutes)
 
 export default app
 

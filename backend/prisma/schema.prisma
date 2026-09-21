@@ -237,6 +237,7 @@ enum Acao {
   AJUSTE_STOCK
   ALTERAR_PRECO
   ALTERAR_ROLE
+  GERAR_NOTA_CREDITO
 }
 
 model logs_auditoria {
@@ -282,15 +283,28 @@ model taxas_iva {
   medicamentos           medicamentos[]
 }
 
+enum motivo_nota_credito {
+  ERRO_FATURACAO
+  DEVOLUCAO_PRODUTO
+  PRODUTO_DEFEITUOSO
+  ANULACAO_VENDA
+  DESCONTO_POS_VENDA
+  TROCA_PRODUTO
+  OUTRO
+}
+
 model notas_credito {
   id Int @id @default(autoincrement())
 
   venda_id Int
 
-  motivo            String
-  valor_anulado     Decimal  @db.Decimal(15, 2)
-  numero_sequencial String   @unique
-  data_emissao      DateTime @default(now())
+  motivo            motivo_nota_credito @default(ERRO_FATURACAO)
+  valor_anulado     Decimal             @db.Decimal(15, 2)
+  numero_sequencial Int
+  codigo_nota       String              @unique
+  data_emissao      DateTime            @default(now())
+  hash_assinatura   String
+  hash_anterior     String?
 
   venda vendas @relation(fields: [venda_id], references: [id])
 }
