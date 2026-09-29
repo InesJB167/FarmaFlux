@@ -66,7 +66,8 @@ export const efetuarPagamentoService = async (idVenda, dadosPagamento, client = 
     if (valorPago < totalApagar) return {
         success: false,
         status: 400,
-        message: "O valor fornecido é inferior ao Total a ser pago."
+        message: "O valor fornecido é inferior ao Total a ser pago.",
+        data:`Valor a ser pago: ${totalApagar}kz`
     }
 
     if (metodoPagamento === "DINHEIRO") {

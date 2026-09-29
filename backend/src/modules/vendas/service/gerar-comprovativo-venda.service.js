@@ -1,7 +1,8 @@
+import { buscarFarmaciaPorId } from "../../farmacia/repository/buscarFarmacia.js"
 import { listarItensVenda } from "../../item-venda/repository/listarItensVenda.js"
 import { buscarVendaPorId } from "../repository/buscarVendaPorId.js"
 
-export const gerarComprovativoVendaService = async(idVenda)=>{
+export const gerarComprovativoVendaService = async(idVenda, idFarmacia = 1)=>{
     const venda = await buscarVendaPorId(idVenda)
 
     if(!venda) return{
@@ -38,7 +39,15 @@ export const gerarComprovativoVendaService = async(idVenda)=>{
     const data = venda.data_hora
     const dataVenda = new Date(data).toLocaleDateString('pt-AO')
     
-    let nomeFarmacia = "FARMAFLUX"
+    const farmacia = await buscarFarmaciaPorId(idFarmacia)
+    if(!farmacia) return {
+        success: false,
+        status: 404,
+        message: "Dados da farmácia não encontrados."
+    }
+
+    const nomeFarmacia = farmacia.nome_comercial
+    const numeroCertificadoSoftware = farmacia.numero_certificado_software
     const valorTotalVenda = venda.total_bruto
 
     const pagamento = venda.pagamentos
@@ -52,9 +61,17 @@ export const gerarComprovativoVendaService = async(idVenda)=>{
     const valorRecebido = parseFloat(pagamento[0].valor_pago ,2)
     const troco = parseFloat(pagamento[0].troco, 2)
 
+    const hashAssinatura = venda.fatura.hash_assinatura
+    const ultimos4digitos = hashAssinatura.slice(-4)
+
+    const cliente = venda.cliente
+
     const comprovativo = {
         idVenda,
         nomeFarmacia,
+        numeroCertificadoSoftware,
+        ultimos4digitos,
+        cliente,
         dataVenda,
         itensVenda,
         valorTotalVenda,

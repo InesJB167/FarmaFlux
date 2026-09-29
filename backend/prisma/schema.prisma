@@ -259,7 +259,7 @@ model logs_auditoria {
 
 model farmacia {
   id                          Int    @id @default(autoincrement())
-  nif                         String @db.VarChar(20)
+  nif                         String @unique @db.VarChar(20)
   razao_social                String
   nome_comercial              String @db.VarChar(100)
   morada                      String @db.VarChar(100)
@@ -277,7 +277,7 @@ model clientes {
 
 model taxas_iva {
   id                     Int            @id @default(autoincrement())
-  codigo_legal           String
+  codigo_legal           String         @unique
   percentagem            Decimal        @db.Decimal(5, 2)
   motivo_de_insercao_iva String
   medicamentos           medicamentos[]

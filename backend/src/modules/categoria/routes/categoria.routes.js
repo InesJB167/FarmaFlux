@@ -9,7 +9,7 @@ import { editarCategoria } from "../controllers/editar-categoria.controller.js"
 import { deletarCategoria } from "../controllers/deletar-categoria.controller.js"
 const router = express.Router()
 
-router.post("/create" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), criarCategoria)
+router.post("/" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), criarCategoria)
 
 router.get("/" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]), listarCategoria)
 

@@ -18,7 +18,8 @@ export const buscarVendaPorId = async (idVenda, client = prisma)=>{
             data_hora: true,
             status: true,
             pagamentos: true,
-            fatura: true
+            fatura: true,
+            cliente: true
         }
     })
 }

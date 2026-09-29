@@ -1,4 +1,5 @@
 import PDFDocument from "pdfkit"
+import { buscarFarmaciaPorId } from "../../farmacia/repository/buscarFarmacia.js"
 
 // ---------- Cores ----------
 const AZUL_ESCURO = "#0F3D6E"
@@ -35,8 +36,9 @@ function formatarMoeda(valor, moeda = "MT") {
  * @returns {Promise<Buffer>}
  */
 
-export const gerarPdfComprovativo = (comprovativo, farmacia = {}) => {
-    return new Promise((resolve, reject) => {
+
+export const gerarPdfComprovativo = (comprovativo, idFarmacia = 1) => {
+    return new Promise( async (resolve, reject) => {
         const doc = new PDFDocument({ size: "A4", margin: MARGEM })
         const larguraPagina = doc.page.width
         const larguraUtil = larguraPagina - MARGEM * 2
@@ -45,10 +47,10 @@ export const gerarPdfComprovativo = (comprovativo, farmacia = {}) => {
         doc.on("data", (chunk) => chunks.push(chunk))
         doc.on("end", () => resolve(Buffer.concat(chunks)))
         doc.on("error", reject)
+        const farmacia = await buscarFarmaciaPorId(idFarmacia)
 
         const dadosFarmacia = {
-            endereco: farmacia.endereco || "",
-            cidade: farmacia.cidade || "",
+            endereco: farmacia.morada || "",
             telefone: farmacia.telefone || "",
             nif: farmacia.nif || "",
             ...farmacia
@@ -79,7 +81,6 @@ export const gerarPdfComprovativo = (comprovativo, farmacia = {}) => {
         doc.font("Helvetica").fontSize(8.5).fillColor(CINZA_TEXTO)
         const linhasFarmacia = [
             dadosFarmacia.endereco,
-            dadosFarmacia.cidade,
             dadosFarmacia.telefone ? `Tel: ${dadosFarmacia.telefone}` : "",
             dadosFarmacia.nif ? `NIF: ${dadosFarmacia.nif}` : ""
         ].filter(Boolean)
@@ -124,7 +125,7 @@ export const gerarPdfComprovativo = (comprovativo, farmacia = {}) => {
         campo(meioX + 12, linhaY, "Cliente:", comprovativo.clienteNome || "Consumidor Final")
         linhaY += 16
         campo(MARGEM + 12, linhaY, "Farmácia:", nomeFarmacia)
-        campo(meioX + 12, linhaY, "NIF:", comprovativo.clienteNif || "\u2014")
+        campo(meioX + 12, linhaY, "NIF:", comprovativo.cliente.nif || "\u2014")
         linhaY += 16
         campo(MARGEM + 12, linhaY, "Terminal:", comprovativo.terminal || "\u2014")
         campo(meioX + 12, linhaY, "Tipo de Venda:", comprovativo.tipoVenda || "Normal")
@@ -223,6 +224,9 @@ export const gerarPdfComprovativo = (comprovativo, farmacia = {}) => {
         doc.font("Helvetica-Bold").fontSize(12).fillColor(AZUL_MEDIO)
         doc.text("Obrigado pela sua preferência!", MARGEM, y, { width: larguraUtil, align: "center" })
         y += 16
+        doc.font("Helvetica-Bold").fontSize(12).fillColor(AZUL_MEDIO)
+        doc.text(`${comprovativo.ultimos4digitos}-Processado por programa certificado nº ${farmacia.numero_certificado_software}`, MARGEM, y, { width: larguraUtil, align: "center" })
+        y += 16
         doc.font("Helvetica").fontSize(9).fillColor(CINZA_TEXTO)
         doc.text(farmacia.rodape || "FarmaFlux - Cuidando de si e da sua família.", MARGEM, y, {
             width: larguraUtil,
@@ -230,8 +234,7 @@ export const gerarPdfComprovativo = (comprovativo, farmacia = {}) => {
         })
 
         // ---------- Identificação da venda (sem biblioteca de código de barras) ----------
-        // Nota: pdfkit não gera códigos de barras nativamente. Para um código de barras
-        // real (ex: Code128), instala e usa uma lib como "bwip-js" e insere a imagem aqui.
+        
         y += 26
         doc.font("Helvetica").fontSize(9).fillColor(CINZA_TEXTO)
         doc.text(`N\u00ba da Venda: ${comprovativo.idVenda}`, MARGEM, y, { width: larguraUtil, align: "center" })

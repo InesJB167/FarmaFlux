@@ -31,7 +31,7 @@ app.use("/auth" ,authRoutes)
 app.use("/users" ,utilizadoresRoutes)
 
 //rota categoria
-app.use("/category" ,categoriasRoutes)
+app.use("/categoria" ,categoriasRoutes)
 
 //rota de localizacoes
 app.use("/localizacoes" ,localizacoesRoutes)

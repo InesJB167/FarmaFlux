@@ -55,9 +55,16 @@ export const finalizarVendaService = async (idVenda, dadosPagamento) =>
         const retiradaDosItensNoStock = await efetuarBaixaDeStock(itensParaRetirada, tx)
 
         const gerarCodigoFatura = await gerarCodigoFaturaService(idVenda, tx)
-        if(!gerarCodigoFatura.success) return gerarCodigoFatura
+        if (!gerarCodigoFatura.success) return gerarCodigoFatura
+        const idFatura = gerarCodigoFatura.data.id
+        const dadosVenda = {
+            id: venda.id,
+            total_bruto: venda.total_bruto,
+            status: venda.status
+        }
 
-        const gerarAssinatura = await gerarAssinaturaHashDeFatura(idVenda,tx)
+        const gerarAssinatura = await gerarAssinaturaHashDeFatura(idFatura,dadosVenda, tx)
+        console.log("assinatura da fatura gerada?? ",gerarAssinatura)
 
         const mudarStatusVenda = await tx.vendas.update({
             where: {
@@ -70,7 +77,8 @@ export const finalizarVendaService = async (idVenda, dadosPagamento) =>
                 id: true,
                 total_bruto: true,
                 total_desconto: true,
-                status: true
+                status: true,
+                cliente: true
             }
         })
 

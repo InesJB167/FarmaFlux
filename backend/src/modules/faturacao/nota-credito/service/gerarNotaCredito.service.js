@@ -31,7 +31,6 @@ export const gerarNotaCreditoService = async (idVenda, motivo, valorAnulado,idUs
         "OUTRO"
     ]
 
-    console.log("motivo nota",motivo)
     if (!motivosNota.includes(motivo)) return {
         success: false,
         status: 404,

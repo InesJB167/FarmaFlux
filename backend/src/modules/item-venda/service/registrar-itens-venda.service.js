@@ -12,6 +12,12 @@ export const registrarItensVendaService = async (idVenda, idMedicamento, quantid
         message: "Venda não encontrada."
     }
 
+    if(encontrarVenda.status !== "DRAFT") return{
+        success: false,
+        status: 409,
+        message: "Não podem ser adicionados itens a esta venda."
+    }
+
     const medicamentoEncontrado = await buscarMedicamentoPorId(idMedicamento)
     if (!medicamentoEncontrado) return {
         success: false,
