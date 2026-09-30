@@ -59,7 +59,7 @@ app.use("/stock" ,stockRoutes)
 app.use("/nota-credito", notasCreditoRoutes)
 
 //rota para gerar arquivo saft
-app.use("/saft" ,arquivoSaftRoutes)
+app.use("/faturacao/saft" ,arquivoSaftRoutes)
 
 export default app
 

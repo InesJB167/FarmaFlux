@@ -1,3 +1,9 @@
 ### Gerar comprovativo em PDF
-GET http://localhost:5000/venda/5/comprovativo/pdf/ 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsInN0YXR1cyI6IkFUSVZPIiwiaWF0IjoxNzkwNjgwMzg5LCJleHAiOjE3OTA3MDkxODl9.SN1rJSpVYazhluZeacLuEnZ7NZyjnUbWz2id2cMjDe8
+POST http://localhost:5000/faturacao/saft/ 
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsInN0YXR1cyI6IkFUSVZPIiwiaWF0IjoxNzkwNzk5NTc5LCJleHAiOjE3OTA4MjgzNzl9.SS4otlpvL2GT_8yz9Tkg0RjUVvMUHhOvem3-6KWNsG8
+
+{
+    "dataInicio": "2026-09-01",
+    "dataFim": "2026-09-30"
+}

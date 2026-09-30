@@ -12,16 +12,15 @@ import { listarVendasPorPeriodo } from "../../../vendas/repository/listarVendasP
  */
 export const gerarArquivoSaftService = async (dataInicio, dataFim) =>
 {
+    let dadosSaft = {}
     //?dados para o cabeçalho do ficheiro
     const farmacia = await buscarDadosDaFarmacia()
-    if (!farmacia) return {
-        success: false,
-        status: 404,
-        message: "Dados da farmácia não encontrados."
+    if (!farmacia) {
+        throw new Error("Dados da farmácia não encontrados.")
     }
 
     //?dados para as tabelas mestre - aqui vai incluir dados de cliente ,produto e taxas
-    
+
     const vendas = await listarVendasPorPeriodo(dataInicio, dataFim)
 
     const clientes = []
@@ -45,7 +44,6 @@ export const gerarArquivoSaftService = async (dataInicio, dataFim) =>
         }
         taxasIva.push(taxaIva)
     }
-    console.log("taxas iva utilizadas: ", taxasIva)
 
     //?dados para os documentos comerciais
     let dadosComerciais = []
@@ -59,9 +57,9 @@ export const gerarArquivoSaftService = async (dataInicio, dataFim) =>
         dadosVenda.id = venda.fatura.id
         dadosVenda.codigo = venda.fatura.codigo_fatura
         dadosVenda.dataEmissao = venda.fatura.created_at,
-        dadosVenda.hash = venda.fatura.hash_assinatura,
-        dadosVenda.cliente = venda.cliente.nome,
-        dadosVenda.totalVenda = venda.total_bruto
+            dadosVenda.hash = venda.fatura.hash_assinatura,
+            dadosVenda.cliente = venda.cliente.nome,
+            dadosVenda.totalVenda = venda.total_bruto
 
         //?dados do corpo da venda
         const itensDaVenda = venda.itens_venda.map((item) => ({
@@ -79,25 +77,31 @@ export const gerarArquivoSaftService = async (dataInicio, dataFim) =>
             data: nota.data_emissao
         }))
 
+        //!falta inserir os pagamentos do periodo
+        const pagamentos = venda.pagamentos.map((pagamento) => ({
+            id: pagamento.id,
+            metodo: pagamento.metodo,
+            valorPago: pagamento.valor_pago,
+            dataPagamento: pagamento.created_at
+        }))
+
         dadoVendaComercial = {
             dadosVenda: dadosVenda,
             itensVenda: itensDaVenda,
-            notaCredito: notasCreditoDaVenda
+            notaCredito: notasCreditoDaVenda,
+            pagamento: pagamentos
         }
 
         dadosComerciais.push(dadoVendaComercial)
     }
 
-    return {
-        success: true,
-        status: 201,
-        message: "Arquivo Saf-t.",
-        data: {
-            farmacia,
-            clientes,
-            medicamentos,
-            taxasIva,
-            dadosComerciais
-        }
+    dadosSaft = {
+        farmacia,
+        clientes,
+        medicamentos,
+        taxasIva,
+        dadosComerciais
     }
+
+    return dadosSaft
 }
