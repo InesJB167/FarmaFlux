@@ -11,6 +11,7 @@ import barcodesRoutes from "./src/modules/barcodes/routes/barcodes.routes.js"
 import vendasRoutes from "./src/modules/vendas/router/venda.routes.js"
 import stockRoutes from "./src/modules/stock/router/stock.route.js"
 import notasCreditoRoutes from "./src/modules/faturacao/nota-credito/router/nota-credito.route.js"
+import arquivoSaftRoutes from "./src/modules/faturacao/saft/router/arquivoSaft.route.js"
 
 import test from "./src/modules/faturacao/codigo-fatura/service/test.route.js"
 
@@ -56,6 +57,9 @@ app.use("/stock" ,stockRoutes)
 
 //rota para notas crédito
 app.use("/nota-credito", notasCreditoRoutes)
+
+//rota para gerar arquivo saft
+app.use("/saft" ,arquivoSaftRoutes)
 
 export default app
 

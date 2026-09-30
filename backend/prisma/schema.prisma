@@ -93,6 +93,7 @@ model lotes {
   data_entrada   DateTime  @default(now())
   created_at     DateTime  @default(now())
   deleted_at     DateTime?
+  updated_at     DateTime   @default(now())
 
   // Relações
   fornecedor  fornecedores @relation(fields: [fornecedor_id], references: [id])
