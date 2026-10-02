@@ -13,17 +13,12 @@ import stockRoutes from "./src/modules/stock/router/stock.route.js"
 import notasCreditoRoutes from "./src/modules/faturacao/nota-credito/router/nota-credito.route.js"
 import arquivoSaftRoutes from "./src/modules/faturacao/saft/router/arquivoSaft.route.js"
 
-import test from "./src/modules/faturacao/codigo-fatura/service/test.route.js"
-
 //!"Primeiro fazemos funcionar. Depois fazemos funcionar direito. Só depois fazemos bonito."
 
 const app = express()
 
 app.use(cors()) 
 app.use(express.json())
-
-//rotas do sistema
-app.use("/test", test)
 
 //para autenticação
 app.use("/auth" ,authRoutes)
