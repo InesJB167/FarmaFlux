@@ -263,6 +263,7 @@ model farmacia {
   nif                         String @unique @db.VarChar(20)
   razao_social                String
   nome_comercial              String @db.VarChar(100)
+  provincia                   String @default("Luanda")
   morada                      String @db.VarChar(100)
   telefone                    String @db.VarChar(100)
   numero_certificado_software String
@@ -273,6 +274,7 @@ model clientes {
   nif      String   @unique @db.VarChar(20)
   nome     String   @db.VarChar(200)
   endereco String?
+  provincia String @default("Luanda")
   vendas   vendas[]
 }
 

@@ -28,6 +28,11 @@ export const listarMedicamentoVendidosEmUmPeriodo = async(dataInicio,dataFim)=>{
                     percentagem: true,
                     motivo_de_insercao_iva: true
                 }
+            },
+            barcodes:{
+                select:{
+                    codigo: true
+                }
             }
         }
     })

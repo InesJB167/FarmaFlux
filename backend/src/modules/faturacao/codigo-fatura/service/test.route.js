@@ -2,7 +2,22 @@ import express from "express"
 import { gerarCodigoFaturaService } from "./gerarCodigoFatura.service.js"
 import { gerarAssinaturaHashDeFatura } from "../../assinatura/service/gerarAssinaturaHash.service.js"
 import { gerarNotaCreditoService } from "../../nota-credito/service/gerarNotaCredito.service.js"
+import { gerarArquivoSaftXml } from "../../saft/service/gerarArquivoSaftXml.service.js"
+import { validarArquivoSaft } from "../../saft/repository/validarArquivoSaft.js"
 const route = express.Router()
+
+const validarArquivoSaftXml = async(req,res)=>{
+    try {
+        const dataInicio = new Date(req.body.dataInicio)
+        const dataFim = new Date(req.body.dataFim)
+        const arquivoXml = await gerarArquivoSaftXml(dataInicio,dataFim)
+        const validarArquivo = await validarArquivoSaft(arquivoXml)
+        return res.json(validarArquivo)
+    } catch (error) {
+        console.log(error)
+        return res.json(error.message)
+    }
+}
 
 const gerarCodigoFatura = async(req,res)=>{
     try {
@@ -50,4 +65,6 @@ const gerarNotaDeCredito = async(req,res)=>{
 route.post("/gerarCodigo" ,gerarCodigoFatura)
 route.patch("/assinatura",gerarAssinatura)
 route.post("/nota-credito", gerarNotaDeCredito)
+
+route.post("/validar/saft",validarArquivoSaftXml)
 export default route

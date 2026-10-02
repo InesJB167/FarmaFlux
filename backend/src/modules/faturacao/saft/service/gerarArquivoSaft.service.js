@@ -57,18 +57,23 @@ export const gerarArquivoSaftService = async (dataInicio, dataFim) =>
         dadosVenda.id = venda.fatura.id
         dadosVenda.codigo = venda.fatura.codigo_fatura
         dadosVenda.dataEmissao = venda.fatura.created_at,
-            dadosVenda.hash = venda.fatura.hash_assinatura,
-            dadosVenda.cliente = venda.cliente.nome,
-            dadosVenda.totalVenda = venda.total_bruto
+        dadosVenda.hash = venda.fatura.hash_assinatura,
+        dadosVenda.clienteId = venda.cliente_id
+        dadosVenda.cliente = venda.cliente.nome,
+        dadosVenda.totalVenda = venda.total_bruto
+        dadosVenda.idUtilizador = venda.utilizador.id
+        dadosVenda.nomeUtilizador = venda.utilizador.nome
 
         //?dados do corpo da venda
         const itensDaVenda = venda.itens_venda.map((item) => ({
+            medicamentoId: item.medicamento_id,
             medicamento: item.medicamento.nome,
             quantidade: item.quantidade,
             precoUnitario: item.preco_unitario,
             imposto: 0 //apenas para medicamentos por enquanto.
         }))
 
+        
         const notasCreditoDaVenda = venda.notas_credito.map((nota) => ({
             numero: nota.numero_sequencial,
             facturaOriginal: venda.fatura.codigo_fatura,  // a que está a anular
