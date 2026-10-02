@@ -17,18 +17,20 @@ export const validarArquivoSaft = async (xmlString) =>
         xsd = XsdValidator.fromDoc(xsdDoc)//* variavel pra validar
 
         //*usando o metodo pra validar o arquivo
-        const errors = xsd.validate(xmlDoc)
+        xsd.validate(xmlDoc)
         console.log("saft validado")
-        return errors
+        return true
     } catch (error) {
         console.log("Erros na estrutura do saft", error)
             error.forEach(element =>
             {
                 console.log(`Linha de erro ${element.line}: ${element.message}`)
             });
+        return false
     } finally {
         //*liberando itens da memoria
         xmlDoc.dispose()
+        xsdDoc.dispose()
         xsd.dispose()
     }
 }

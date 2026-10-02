@@ -1,5 +1,5 @@
 ### Gerar comprovativo em PDF
-POST http://localhost:5000/test/validar/saft/ 
+POST http://localhost:5000/faturacao/saft/
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiIsInN0YXR1cyI6IkFUSVZPIiwiaWF0IjoxNzkwOTIzNzc4LCJleHAiOjE3OTA5NTI1Nzh9.7BNp32WdFyyFzo6b76ojme1QJOoQDO035qOHTSjwZns
 
