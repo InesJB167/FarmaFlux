@@ -47,7 +47,9 @@ async function main()
             nome_comercial: "Farmácia FarmaFlux",
             morada: "Rua Rainha Ginga, nº 45, Ingombota, Luanda",
             telefone: "+244 923 456 789",
-            numero_certificado_software: "000/TESTE/AGT"
+            numero_certificado_software: "000/TESTE/AGT",
+
+            tenant_id: "farmacia-farmaflux"
         },
         create: {
             nif: "5417234567",
@@ -55,7 +57,9 @@ async function main()
             nome_comercial: "Farmácia FarmaFlux",
             morada: "Rua Rainha Ginga, nº 45, Ingombota, Luanda",
             telefone: "+244 923 456 789",
-            numero_certificado_software: "000/TESTE/AGT"
+            numero_certificado_software: "000/TESTE/AGT",
+
+            tenant_id: "farmacia-farmaflux"
         }
     })
 

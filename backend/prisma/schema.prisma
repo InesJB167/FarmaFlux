@@ -93,7 +93,7 @@ model lotes {
   data_entrada   DateTime  @default(now())
   created_at     DateTime  @default(now())
   deleted_at     DateTime?
-  updated_at     DateTime   @default(now())
+  updated_at     DateTime  @default(now())
 
   // Relações
   fornecedor  fornecedores @relation(fields: [fornecedor_id], references: [id])
@@ -103,6 +103,7 @@ model lotes {
 }
 
 enum Role {
+  SUPER_ADMIN
   ADMIN
   GERENTE
   OPERADOR
@@ -142,8 +143,12 @@ model utilizadores {
   rejectedUsers utilizadores[] @relation("AdminReprovacao")
   deletedUsers  utilizadores[] @relation("AdminDelete")
 
-  vendas         vendas[]
-  logs_auditoria logs_auditoria[]
+  vendas            vendas[]
+  logs_auditoria    logs_auditoria[]
+  tenants           tenants[]
+  planos_licenca    planos_licenca[]
+  pagamento_licenca pagamento_licenca[]
+  codigos_ativacao  codigos_ativacao[]
 }
 
 enum Status {
@@ -267,15 +272,20 @@ model farmacia {
   morada                      String @db.VarChar(100)
   telefone                    String @db.VarChar(100)
   numero_certificado_software String
+
+  //dados para licenciamento da farmacia
+  data_validade_licenca DateTime?
+  ultima_verificacao    DateTime?
+  tenant                tenants?
 }
 
 model clientes {
-  id       Int      @id @default(autoincrement())
-  nif      String   @unique @db.VarChar(20)
-  nome     String   @db.VarChar(200)
-  endereco String?
-  provincia String @default("Luanda")
-  vendas   vendas[]
+  id        Int      @id @default(autoincrement())
+  nif       String   @unique @db.VarChar(20)
+  nome      String   @db.VarChar(200)
+  endereco  String?
+  provincia String   @default("Luanda")
+  vendas    vendas[]
 }
 
 model taxas_iva {
@@ -327,4 +337,96 @@ model fatura {
   created_at      DateTime @default(now())
 
   @@unique([serie, ano, sequencial])
+}
+
+//PARTE DO LICENCIAMENTO 
+
+enum estado_tenants {
+  ATIVO
+  PENDENTE
+  SUSPENSO
+  CANCELADO
+}
+
+enum tipo_periodo_licenca {
+  MENSAL // LCM
+  TRIMESTRAL // LCT
+  SEMESTRAL // LCS
+  ANUAL // LCA
+}
+
+enum metodo_pagamento_licenca {
+  DINHEIRO
+  TRANSFERENCIA
+}
+
+model tenants {
+  id                     Int            @id @default(autoincrement())
+  tenant_id              String         @unique
+  farmacia_id            Int            @unique
+  estado                 estado_tenants @default(PENDENTE)
+  data_proximo_pagamento DateTime?
+  limite_dispositivos    Int            @default(5)
+  created_at             DateTime       @default(now())
+  utilizador_id          Int
+
+  utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
+  farmacia   farmacia     @relation(fields: [farmacia_id], references: [id])
+
+  dispositivos     dispositivos[]
+  codigos_ativacao codigos_ativacao[]
+  pagamentos       pagamento_licenca[]
+}
+
+model dispositivos {
+  id            Int      @id @default(autoincrement())
+  tenant_id_fk  Int
+  id_hardware   String   @unique @db.VarChar(255)
+  token_jwt     String?  @db.VarChar(500)
+  data_ativacao DateTime @default(now())
+  ultimo_acesso DateTime @default(now())
+
+  tenant tenants @relation(fields: [tenant_id_fk], references: [id])
+}
+
+model codigos_ativacao {
+  id            Int       @id @default(autoincrement())
+  codigo        String    @unique @db.VarChar(8)
+  tenant_id_fk  Int
+  codigo_usado  Boolean   @default(false)
+  expira_em     DateTime?
+  created_at    DateTime  @default(now())
+  utilizador_id Int
+
+  utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
+  tenant     tenants      @relation(fields: [tenant_id_fk], references: [id])
+}
+
+model planos_licenca {
+  id            Int                  @id @default(autoincrement())
+  codigo        String               @unique @db.VarChar(10) // LCM, LCT, LCS, LCA
+  tipo          tipo_periodo_licenca
+  custo         Decimal              @db.Decimal(10, 2)
+  duracao_dias  Int //ex.:  30, 90, 180, 365
+  utilizador_id Int
+  utilizador    utilizadores         @relation(fields: [utilizador_id], references: [id])
+  pagamentos    pagamento_licenca[]
+}
+
+model pagamento_licenca {
+  id             Int                      @id @default(autoincrement())
+  tenant_id_fk   Int
+  plano_id       Int
+  valor_pago     Decimal                  @db.Decimal(10, 2)
+  metodo         metodo_pagamento_licenca @default(TRANSFERENCIA)
+  data_pagamento DateTime                 @default(now())
+  data_inicio    DateTime // quando a licença começa a valer
+  data_fim       DateTime // quando a licença termina
+  created_at     DateTime                 @default(now())
+  referencia     String                   @unique //a referencia bancaria usada
+  utilizador_id  Int
+
+  utilizador utilizadores   @relation(fields: [utilizador_id], references: [id])
+  tenant     tenants        @relation(fields: [tenant_id_fk], references: [id])
+  plano      planos_licenca @relation(fields: [plano_id], references: [id])
 }
