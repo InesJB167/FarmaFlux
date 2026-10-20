@@ -8,12 +8,16 @@ import bcrypt from "bcrypt";
 async function main()
 {
 
-    const senha = process.env.ADMIN_PASSWORD
-    if (!senha) {
-        throw new Error("Senha não definida no .env")
+    const senhaAdmin = process.env.ADMIN_PASSWORD
+    const senhaSuperAdmin = process.env.SUPER_ADMIN_PASSWORD
+    if (!senhaAdmin || !senhaSuperAdmin) {
+        throw new Error("Senhas não definidas no .env")
     }
 
-    const hash = await bcrypt.hash(senha, 10)
+    const hashAdmin = await bcrypt.hash(senhaAdmin, 10)
+    const hashSuperAdmin = await bcrypt.hash(senhaSuperAdmin, 10)
+
+    //?creating user client
     const user = await prisma.utilizadores.upsert({
         where: {
             username: "admin"
@@ -21,7 +25,7 @@ async function main()
 
         update: {
             nome: "Administrador",
-            password_hash: hash,
+            password_hash: hashAdmin,
             role: "ADMIN",
             status: "ATIVO"
         },
@@ -29,37 +33,31 @@ async function main()
         create: {
             username: "admin",
             nome: "Administrador",
-            password_hash: hash,
+            password_hash: hashAdmin,
             role: "ADMIN",
             status: "ATIVO"
         }
 
     })
 
-    // ---------- Farmácia (única linha) ----------
-    await prisma.farmacia.upsert({
+    //? creating user dev
+    const superUser = await prisma.utilizadores.upsert({
         where: {
-            nif: "5417234567"
+            username: "superUser"
         },
         update: {
-            nif: "5417234567",
-            razao_social: "FarmaFlux Distribuição de Medicamentos, Lda",
-            nome_comercial: "Farmácia FarmaFlux",
-            morada: "Rua Rainha Ginga, nº 45, Ingombota, Luanda",
-            telefone: "+244 923 456 789",
-            numero_certificado_software: "000/TESTE/AGT",
-
-            tenant_id: "farmacia-farmaflux"
+            nome: "Super user",
+            username: "superUser",
+            password_hash: hashSuperAdmin,
+            role: "SUPER_ADMIN",
+            status: "ATIVO"
         },
         create: {
-            nif: "5417234567",
-            razao_social: "FarmaFlux Distribuição de Medicamentos, Lda",
-            nome_comercial: "Farmácia FarmaFlux",
-            morada: "Rua Rainha Ginga, nº 45, Ingombota, Luanda",
-            telefone: "+244 923 456 789",
-            numero_certificado_software: "000/TESTE/AGT",
-
-            tenant_id: "farmacia-farmaflux"
+            nome: "Super user",
+            username: "superUser",
+            password_hash: hashSuperAdmin,
+            role: "SUPER_ADMIN",
+            status: "ATIVO"
         }
     })
 
@@ -68,13 +66,15 @@ async function main()
         where: {
             codigo_legal: "ISE"
         },
-        update: {},
+        update: {
+            codigo_legal: "ISE",
+            percentagem: 0.00,
+            motivo_de_insercao_iva: "Isento - medicamentos e especialidades farmacêuticas"
+        },
         create: {
-            data: {
-                codigo_legal: "ISE",
-                percentagem: 0.00,
-                motivo_de_insercao_iva: "Isento - medicamentos e especialidades farmacêuticas"
-            }
+            codigo_legal: "ISE",
+            percentagem: 0.00,
+            motivo_de_insercao_iva: "Isento - medicamentos e especialidades farmacêuticas"
         }
     })
 
@@ -82,27 +82,38 @@ async function main()
         where: {
             codigo_legal: "NOR"
         },
-        update: {},
+        update: {
+            codigo_legal: "NOR",
+            percentagem: 14.00,
+            motivo_de_insercao_iva: "Taxa normal - produtos não farmacêuticos"
+        },
         create: {
-            data: {
-                codigo_legal: "NOR",
-                percentagem: 14.00,
-                motivo_de_insercao_iva: "Taxa normal - produtos não farmacêuticos"
-            }
+            codigo_legal: "NOR",
+            percentagem: 14.00,
+            motivo_de_insercao_iva: "Taxa normal - produtos não farmacêuticos"
         }
     })
 
     // ---------- Cliente genérico (Consumidor Final) ----------
-    await prisma.clientes.create({
-        data: {
+    await prisma.clientes.upsert({
+        where: {
+            nif: "999999999"
+        },
+        update: {
+            nif: "999999999",
+            nome: "Consumidor Final",
+            endereco: null
+        },
+        create: {
             nif: "999999999",
             nome: "Consumidor Final",
             endereco: null
         }
     })
 
+
     console.log("Seed executado com sucesso!");
-    console.log(`Admin ${user.username} criado/atualizado com sucesso!`)
+    console.log(`Admin ${user.username} criado/atualizado com sucesso! /n Super User ${superUser.username} criado/atualizado .`)
 }
 
 main()
