@@ -9,7 +9,7 @@ const route = express.Router()
 
 route.post("/", autenticar, authorization(["SUPER_ADMIN"]), criarTenant)
 route.post("/:id/codigo-ativacao/", autenticar, authorization(["SUPER_ADMIN"]), gerarCodigoAtivacao)
-route.post("/:id/pagamento", registrarPagamento)
-route.post("/:id/renovar-subscricao", estenderSubscricao)
+route.post("/:id/pagamento", autenticar, authorization(["SUPER_ADMIN"]), registrarPagamento)
+route.post("/:id/renovar-subscricao", autenticar, authorization(["SUPER_ADMIN"]), estenderSubscricao)
 
 export default route

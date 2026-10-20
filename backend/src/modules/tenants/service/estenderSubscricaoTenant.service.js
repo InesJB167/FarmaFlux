@@ -1,7 +1,7 @@
 import { buscarTenantPorId } from "../repository/buscarTenantPorId.js"
-import { registrarPagamentoService } from "../../pagamento_licenca/service/registrar-pagamento.service.js"
+import { registrarPagamentoLicencaService } from "../../pagamento_licenca/service/registrar-pagamento.service.js"
 
-export const estenderSubscricaoService = async (idTenant, dadosPagamento) =>
+export const estenderSubscricaoService = async (idUser,idTenant, dadosPagamento) =>
 {
     const tenant = await buscarTenantPorId(idTenant)
     if (!tenant) return {
@@ -17,7 +17,9 @@ export const estenderSubscricaoService = async (idTenant, dadosPagamento) =>
         message: "Não se pode estender a subscrição deste tenant."
     }
 
-    const realizarPagamento = await registrarPagamentoService(idTenant, dadosPagamento)
+    const idPlano = dadosPagamento.idPlano
+    console.log("id plano licensa no service de estender subscricao ",idPlano)
+    const realizarPagamento = await registrarPagamentoLicencaService(idUser ,idTenant, dadosPagamento)
 
     if(!realizarPagamento.success) return realizarPagamento
 

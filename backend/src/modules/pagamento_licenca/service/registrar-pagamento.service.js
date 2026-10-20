@@ -3,7 +3,7 @@ import { buscarPlanoLicencaPorId } from "../../planos_licenca/repos/buscarPlanoP
 import { buscarTenantPorId } from "../../tenants/repository/buscarTenantPorId.js"
 import { buscarPagamentoPorReferencia } from "../../pagamento_licenca/repos/buscarPagamentoPorReferencia.js"
 
-export const registrarPagamentoService = async (idTenant, dadosPagamento) =>
+export const registrarPagamentoLicencaService = async (idUser,idTenant, dadosPagamento) =>
 {
     const tenant = await buscarTenantPorId(idTenant)
     if (!tenant) return {
@@ -18,6 +18,7 @@ export const registrarPagamentoService = async (idTenant, dadosPagamento) =>
         message: "Este tenant foi cancelado."
     }
 
+    console.log("id plano licensa no registrar pagamento service",dadosPagamento.idPlano)
     const planoLicenca = await buscarPlanoLicencaPorId(dadosPagamento.idPlano)
     if (!planoLicenca) return {
         success: false,
@@ -81,6 +82,11 @@ export const registrarPagamentoService = async (idTenant, dadosPagamento) =>
     {
         const registrarPagamento = await tx.pagamento_licenca.create({
             data: {
+                utilizador:{
+                    connect:{
+                        id: idUser
+                    }
+                },
                 tenant: {
                     connect: {
                         id: idTenant

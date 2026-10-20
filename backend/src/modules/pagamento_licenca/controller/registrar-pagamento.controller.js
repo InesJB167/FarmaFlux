@@ -1,4 +1,4 @@
-import { registrarPagamentoService } from "../service/registrar-pagamento.service.js"
+import { registrarPagamentoLicencaService } from "../service/registrar-pagamento.service.js"
 
 export const registrarPagamento = async(req,res)=>{
     try {
@@ -27,7 +27,7 @@ export const registrarPagamento = async(req,res)=>{
             referencia
         }
 
-        const registrar = await registrarPagamentoService(idTenant,dadosPagamento)
+        const registrar = await registrarPagamentoLicencaService(idTenant,dadosPagamento)
         return res.status(registrar.status).json(registrar)
 
     } catch (error) {

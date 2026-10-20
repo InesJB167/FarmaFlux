@@ -6,9 +6,10 @@ export const estenderSubscricao = async (req, res) =>{
          * *o que eu preciso pra estender uma subscriçao??
          * *na verdade penso que estende-se uma subscriçao qudo se paga novamente um plano da licença ...se for o caso os dados necessarios pra se estender seráo apenas o plano escolhido e baseado nisso ,sabe-se o valor e duraçao sabendo isso realiza-se o pagamento logo apos isso estende-se a duraçao de dias se o tenant estiver suspenso volta ativo se nao continua ativo ...
          */
-
+        const idUser = req.user.id
         const idTenant = parseInt(req.params.id)
         const idPlano = parseInt(req.body.idPlano)
+        console.log("id plano licensa no controller",idPlano)
         const valorPago = parseFloat(req.body.valorPago)
         const metodosPagamento = ["DINHEIRO","TRANSFERENCIA"]
         const metodoUsado = req.body.metodoUsado?.trim().toUpperCase()
@@ -31,7 +32,7 @@ export const estenderSubscricao = async (req, res) =>{
             referencia
         }
 
-        const renovarSubscricao = await estenderSubscricaoService(idTenant, dadosPagamento)
+        const renovarSubscricao = await estenderSubscricaoService(idUser, idTenant, dadosPagamento)
         return res.status(renovarSubscricao.status).json(renovarSubscricao)
 
     } catch (error) {
