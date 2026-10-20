@@ -1,0 +1,1 @@
+//!preciso criar uma funçao que vai verificar se a licensa expirou ou nao, ela vai usar a data atual e verificar com a data do pagamento do tenant ,se o passou ele suspende logo o tenant e impede logo o login caso cotrario continuao fluxo
