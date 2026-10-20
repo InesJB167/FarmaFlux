@@ -42,8 +42,6 @@ export const criarTenant = async (req, res) =>
             referencia
         }
 
-        console.log("dados farmacia", dadosFarmacia)
-
         const novoTenant = await criarTenantService(idUser,dadosFarmacia,dadosPagamento)
         return res.status(novoTenant.status).json(novoTenant)
 

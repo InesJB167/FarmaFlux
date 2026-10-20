@@ -1,7 +1,7 @@
 import prisma from "../../../../prisma/prisma.js"
 import { buscarCodigoPlanoLicenca } from "../repos/buscarCodigoPlanoLicenca.js"
 
-export const criarPlanoLicenca = async (tipoLicenca, custo) =>
+export const criarPlanoLicenca = async (idUser,tipoLicenca, custo) =>
 {
     let duracaoPlano
     let codigoLicenca
@@ -36,6 +36,11 @@ export const criarPlanoLicenca = async (tipoLicenca, custo) =>
 
     const criarPlano = await prisma.planos_licenca.create({
         data:{
+            utilizador:{
+                connect:{
+                    id: idUser
+                }
+            },
             codigo: codigoLicenca,
             tipo: tipoLicenca,
             custo: custo,

@@ -27,6 +27,8 @@ export const criarTenantService = async (idUser, dadosTenant, dadosPagamento) =>
     }
 
     const custoPlano = parseFloat(planoLicenca.custo)
+    const valorPago = dadosPagamento.valorPago
+    console.log(`valor pago ${valorPago}, custo ${custoPlano}`)
     if (dadosPagamento.valorPago < custoPlano) {
         return {
             success: false,
@@ -43,15 +45,16 @@ export const criarTenantService = async (idUser, dadosTenant, dadosPagamento) =>
     const duracaoPlano = planoLicenca.duracao_dias
     const diasIncrementados = diaPagamento.getDate() + duracaoPlano
     const diaFimPlano = new Date(diaPagamento.setDate(diasIncrementados))
-    console.log(`dia do pagamento ${diaPagamento.toLocaleDateString('pt-BR')}, duraçao ${duracaoPlano}, dias incrementados ${diasIncrementados}, dia fim do plano ${diaFimPlano.toLocaleDateString('pt-BR')}`)
 
     const dadosParaRegistroPagamento = {
         valor_pago: dadosPagamento.valorPago,
         metodo: dadosPagamento.metodoUsado,
         referencia: dadosPagamento.referencia,
-        data_inicio: diaPagamento,
+        data_inicio: new Date(),
         data_fim: diaFimPlano
     }
+
+    dadosTenant.data_proximo_pagamento = diaFimPlano
 
     const registrarTenant = await prisma.$transaction(async (tx) => {
         const novoTenant = await tx.tenants.create({
