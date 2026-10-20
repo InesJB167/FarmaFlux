@@ -89,8 +89,17 @@ export const criarTenantService = async (idUser, dadosTenant, dadosPagamento) =>
             }
         })
 
+        const atualizarStatusTenant = await tx.tenants.update({
+            where:{
+                id: novoTenant.id
+            },
+            data:{
+                estado: "ATIVO"
+            }
+        })
+
         return {
-            novoTenant,
+            atualizarStatusTenant,
             registrarPagamento
         }
     })

@@ -8,7 +8,7 @@ import { estenderSubscricao } from "../controller/estenderSubscricaoTenant.contr
 const route = express.Router()
 
 route.post("/", autenticar, authorization(["SUPER_ADMIN"]), criarTenant)
-route.post("/:id/codigo-ativacao/", gerarCodigoAtivacao)
+route.post("/:id/codigo-ativacao/", autenticar, authorization(["SUPER_ADMIN"]), gerarCodigoAtivacao)
 route.post("/:id/pagamento", registrarPagamento)
 route.post("/:id/renovar-subscricao", estenderSubscricao)
 

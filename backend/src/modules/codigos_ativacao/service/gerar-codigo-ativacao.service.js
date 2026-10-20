@@ -3,7 +3,7 @@ import { randomInt } from "node:crypto"
 import { buscarCodigoAtivacao } from "../repos/buscarCodigoAtivacao.js"
 import { buscarTenantPorId } from "../../tenants/repository/buscarTenantPorId.js"
 
-export const gerarCodigoAtivacaoService = async(tenantId)=>{
+export const gerarCodigoAtivacaoService = async(idUser,tenantId)=>{
     /**
      * ? essa funçao vai gerar o codigo de ativaçao para o uso do sistema 
      */
@@ -37,6 +37,11 @@ export const gerarCodigoAtivacaoService = async(tenantId)=>{
 
     const registrarCodigo = await prisma.codigos_ativacao.create({
         data:{
+            utilizador:{
+                connect:{
+                    id: idUser
+                }
+            },
             codigo: codigoAtivacao,
             tenant:{
                 connect:{
