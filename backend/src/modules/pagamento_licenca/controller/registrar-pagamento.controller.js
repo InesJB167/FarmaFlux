@@ -2,6 +2,7 @@ import { registrarPagamentoLicencaService } from "../service/registrar-pagamento
 
 export const registrarPagamento = async(req,res)=>{
     try {
+        const idUser = req.user.id
         const idTenant = parseInt(req.params.id)
         const idPlano = parseInt(req.body.idPlano)
         const valorPago = parseFloat(req.body.valorPago)
@@ -27,7 +28,7 @@ export const registrarPagamento = async(req,res)=>{
             referencia
         }
 
-        const registrar = await registrarPagamentoLicencaService(idTenant,dadosPagamento)
+        const registrar = await registrarPagamentoLicencaService(idUser,idTenant,dadosPagamento)
         return res.status(registrar.status).json(registrar)
 
     } catch (error) {
