@@ -1,4 +1,4 @@
-import { buscarFarmaciaPorId } from "../../farmacia/repository/buscarFarmacia.js"
+import { buscarFarmaciaPorId } from "../../farmacia/repository/buscarFarmaciaPorId.js"
 import { listarItensVenda } from "../../item-venda/repository/listarItensVenda.js"
 import { buscarVendaPorId } from "../repository/buscarVendaPorId.js"
 

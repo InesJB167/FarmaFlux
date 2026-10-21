@@ -1,4 +1,4 @@
-import { buscarDadosDaFarmacia } from "../../../farmacia/repository/buscarDadoFarmacia.js"
+import { buscarFarmaciaPorId } from "../../../farmacia/repository/buscarFarmaciaPorId.js"
 import { listarMedicamentoVendidosEmUmPeriodo } from "../../../medicamento/repository/listarMedicamentosVendidosEmUmPeriodo.js"
 import { listarVendasPorPeriodo } from "../../../vendas/repository/listarVendasPorPeriodo.js"
 
@@ -10,11 +10,14 @@ import { listarVendasPorPeriodo } from "../../../vendas/repository/listarVendasP
   *? Também apresenta valores, impostos, descontos e outros dados das operações.
   *? Em resumo, é como um **registro organizado das atividades fiscais da empresa**.
  */
-export const gerarArquivoSaftService = async (dataInicio, dataFim) =>
+export const gerarArquivoSaftService = async (idFarmacia,dataInicio, dataFim) =>
 {
     let dadosSaft = {}
     //?dados para o cabeçalho do ficheiro
-    const farmacia = await buscarDadosDaFarmacia()
+    /**
+     * !É IMPORTANTE QUE AO GERAR  SAF-T SE SAIBA QUAL É OO ID DA FARMÁCIA EM QUESTÃO POR AGORA VAMOS BUSCAR A FARMACIA POR ID MAS COM O TEMPO VEREMOS COMO SABER AUTOMATICAMENTE O ID DA FARMACIA 
+     */
+    const farmacia = await buscarFarmaciaPorId(idFarmacia)
     if (!farmacia) {
         throw new Error("Dados da farmácia não encontrados.")
     }

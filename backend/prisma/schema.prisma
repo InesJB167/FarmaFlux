@@ -149,6 +149,7 @@ model utilizadores {
   planos_licenca    planos_licenca[]
   pagamento_licenca pagamento_licenca[]
   codigos_ativacao  codigos_ativacao[]
+  farmacia          farmacia[]
 }
 
 enum Status {
@@ -272,6 +273,8 @@ model farmacia {
   morada                      String @db.VarChar(100)
   telefone                    String @db.VarChar(100)
   numero_certificado_software String
+  utilizador_id               Int
+  utilizador   utilizadores   @relation(fields: [utilizador_id], references: [id])
 
   //dados para licenciamento da farmacia
   tenant_id_fk Int     @unique

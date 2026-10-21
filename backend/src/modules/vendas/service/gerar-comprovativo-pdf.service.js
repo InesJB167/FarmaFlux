@@ -1,5 +1,5 @@
 import PDFDocument from "pdfkit"
-import { buscarFarmaciaPorId } from "../../farmacia/repository/buscarFarmacia.js"
+import { buscarFarmaciaPorId } from "../../farmacia/repository/buscarFarmaciaPorId.js"
 
 // ---------- Cores ----------
 const AZUL_ESCURO = "#0F3D6E"
