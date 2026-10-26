@@ -64,7 +64,6 @@
                 secret,
                 { expiresIn: "8h" }
             )
-            console.log("Token gerado:", token)
 
             const atualizarDispositivo = await tx.dispositivos.update({
                 where:{
@@ -73,10 +72,14 @@
                 data:{
                     token_jwt: token,
                     ativo: true
+                },
+                select:{
+                    id: true,
+                    token_jwt: true
                 }
             })
 
-            const atualizarCodigo = await tx.codigos_ativacao.update({
+            await tx.codigos_ativacao.update({
                 where: {
                     id: codigoAtivacao.id
                 },
@@ -91,7 +94,7 @@
             })
 
             return {
-                atualizarDispositivo, atualizarCodigo
+                atualizarDispositivo
             }
         })
 
