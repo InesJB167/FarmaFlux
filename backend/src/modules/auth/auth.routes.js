@@ -1,10 +1,8 @@
 import express from "express";
 import { verificarStatusConta } from "../../middlewares/account-status.middleware.js";
 import { login } from "./auth.controller.js";
+import { verificarSubscricaoLicensa } from "../../middlewares/verificar-licenca.middleware.js";
 const router = express.Router();
 
-/**
- * !deve fazer o login apenas quem tiver o status ativo
- */
-router.post("/", verificarStatusConta, login)
+router.post("/",verificarSubscricaoLicensa, verificarStatusConta, login)
 export default router

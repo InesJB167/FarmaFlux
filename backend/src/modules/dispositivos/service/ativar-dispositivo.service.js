@@ -55,7 +55,7 @@
         {
             const payload = {
                 tenant_id: codigoAtivacao.tenant_id_fk,
-                type: "dispositivo",
+                type: "dipositivo",
                 id: dispositivo.id
             }
             const secret = process.env.JWT_SECRET

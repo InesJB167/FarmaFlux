@@ -3,18 +3,7 @@ import prisma from "../../prisma/prisma.js"
 export const verificarStatusConta = async (req, res, next) => {
 
     try {
-        /**
-         * !apenas users com o status ativo podem acessar o sistema e realizar as demais atividades no mesmo.
-         * 
-         * ? ao fazer o login o sistema deve verificar se o user esta ativo ou inativo
-         * 
-         * *como verificar se o user esta ativo a partir do login??
-         * nesse caso não temos o id ainda ,podemos usar o username que é um atributo unico pra verificar se o user esta ativo ou não ..
-         * 
-         * *se eu fizer a verificação do status logo no login do user vai ser necesssário verificar nas demais rotas ??
-         * sendo que os users inativos não terão acesso será desnecessário verificar as demais rotas ,pois se não tiver acesso ao sistema não terá acesso as demais funcionalidades
-         * 
-         */
+
         const username = req.body.username
 
         if(username === undefined ) return res.status(400).json({message: "Informe os dados para a autenticação."})
@@ -26,7 +15,6 @@ export const verificarStatusConta = async (req, res, next) => {
         if (!username.trim()) {
             return res.status(400).json({ message: "Campo obrigatório!" })
         }
-        console.log("username: ", username)
 
         const verificarUtilizador = await prisma.utilizadores.findUnique({
             where: {
@@ -48,19 +36,15 @@ export const verificarStatusConta = async (req, res, next) => {
         //verificar o status do user
         switch (verificarUtilizador.status) {
             case "PENDENTE":
-                console.log("status da conta:", verificarUtilizador.status)
                 return res.status(403).json({ message: "Conta aguardando avaliação!" })
 
             case "REJEITADO":
-                console.log("status da conta:", verificarUtilizador.status)
                 return res.status(403).json({ message: "Conta inválida!" })
 
             case "INATIVO":
-                console.log("status da conta:", verificarUtilizador.status)
                 return res.status(403).json({ message: "Conta inativa!" })
 
             case "ATIVO":
-                console.log("status do user ", verificarUtilizador.status)
                 return next()
 
             default:

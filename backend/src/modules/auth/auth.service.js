@@ -51,8 +51,7 @@ export const entrar = async (username, senha) =>
                 expiresIn: "8h"
             }
         )
-
-        console.log("o user pode entrar no sistema!")
+        
         return {
             success: true,
             message: "Login efetuado com sucesso!",

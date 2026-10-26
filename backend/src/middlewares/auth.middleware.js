@@ -27,7 +27,6 @@ export const autenticar = (req, res, next)=>{
         
         //guardando dados 
         req.user = decoded
-        console.log("verificando token",decoded)
 
         next()
 
