@@ -4,6 +4,17 @@ export const buscarCodigoAtivacao = async(codigoAtivacao)=>{
     return await prisma.codigos_ativacao.findUnique({
         where:{
             codigo: codigoAtivacao
+        },
+        include:{
+            tenant: {
+                include:{
+                    dispositivos: {
+                        select:{
+                            id: true
+                        }
+                    }
+                }
+            }
         }
     })
 }

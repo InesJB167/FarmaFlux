@@ -265,16 +265,16 @@ model logs_auditoria {
 }
 
 model farmacia {
-  id                          Int    @id @default(autoincrement())
-  nif                         String @unique @db.VarChar(20)
+  id                          Int          @id @default(autoincrement())
+  nif                         String       @unique @db.VarChar(20)
   razao_social                String
-  nome_comercial              String @db.VarChar(100)
-  provincia                   String @default("Luanda")
-  morada                      String @db.VarChar(100)
-  telefone                    String @db.VarChar(100)
+  nome_comercial              String       @db.VarChar(100)
+  provincia                   String       @default("Luanda")
+  morada                      String       @db.VarChar(100)
+  telefone                    String       @db.VarChar(100)
   numero_certificado_software String
   utilizador_id               Int
-  utilizador   utilizadores   @relation(fields: [utilizador_id], references: [id])
+  utilizador                  utilizadores @relation(fields: [utilizador_id], references: [id])
 
   //dados para licenciamento da farmacia
   tenant_id_fk Int     @unique
@@ -382,10 +382,12 @@ model tenants {
 model dispositivos {
   id            Int      @id @default(autoincrement())
   tenant_id_fk  Int
-  id_hardware   String   @unique @db.VarChar(255)
+  device_id     String   @unique @db.VarChar(38) //aqui vai o UUI(universally unique identifier) 
+  fingerPrint   String   @db.VarChar(255) //o fingerPrint gerado
   token_jwt     String?  @db.VarChar(500)
   data_ativacao DateTime @default(now())
   ultimo_acesso DateTime @default(now())
+  ativo         Boolean  @default(true)
 
   tenant tenants @relation(fields: [tenant_id_fk], references: [id])
 }

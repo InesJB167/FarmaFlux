@@ -7,15 +7,16 @@ import { gerarCodigoAtivacao } from "../../codigos_ativacao/controller/gerar-cod
 import { estenderSubscricao } from "../controller/estenderSubscricaoTenant.controller.js";
 import { suspenderTenant } from "../controller/suspender-tenant.controller.js";
 import { registrarFarmacia } from "../../farmacia/controller/registrar-farmacia.controller.js";
+import { verificarUtilizadorAtivo } from "../../../middlewares/check-active-user.middleware.js";
 const route = express.Router()
 
-route.post("/", autenticar, authorization(["SUPER_ADMIN"]), criarTenant)
-route.post("/:id/farmacia/", autenticar, authorization(["SUPER_ADMIN"]), registrarFarmacia)
-route.post("/:id/codigo-ativacao/", autenticar, authorization(["SUPER_ADMIN"]), gerarCodigoAtivacao)
+route.post("/", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), criarTenant)
+route.post("/:id/farmacia/", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), registrarFarmacia)
+route.post("/:id/codigo-ativacao/", autenticar, verificarUtilizadorAtivo ,authorization(["SUPER_ADMIN"]), gerarCodigoAtivacao)
 
-route.post("/:id/pagamento", autenticar, authorization(["SUPER_ADMIN"]), registrarPagamento)
-route.post("/:id/renovar-subscricao", autenticar, authorization(["SUPER_ADMIN"]), estenderSubscricao)
+route.post("/:id/pagamento", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), registrarPagamento)
+route.post("/:id/renovar-subscricao", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), estenderSubscricao)
 
-route.post("/:id/suspender-subscricao/", autenticar, authorization(["SUPER_ADMIN"]), suspenderTenant)
+route.post("/:id/suspender-subscricao/", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), suspenderTenant)
 
 export default route
