@@ -14,21 +14,30 @@ datasource db {
 }
 
 model categorias {
-  id           Int            @id @default(autoincrement())
-  nome         String         @unique @db.VarChar(100)
-  descricao    String?        @db.Text
-  deleted_at   DateTime?
-  created_at   DateTime       @default(now())
+  id          Int       @id @default(autoincrement())
+  nome        String    @db.VarChar(100)
+  descricao   String?   @db.Text
+  deleted_at  DateTime?
+  created_at  DateTime  @default(now())
+  farmacia_id Int
+  farmacia    farmacia  @relation(fields: [farmacia_id], references: [id])
+
   medicamentos medicamentos[]
+
+  //restrição de unicidade composta
+  @@unique([farmacia_id, nome])
 }
 
 model localizacoes {
-  id           Int            @id @default(autoincrement())
-  zona         String         @db.VarChar(100)
-  estante      String         @db.VarChar(50)
-  nivel        String         @db.VarChar(50)
-  descricao    String?        @db.VarChar(200)
-  deleted_at   DateTime?
+  id          Int       @id @default(autoincrement())
+  zona        String    @db.VarChar(100)
+  estante     String    @db.VarChar(50)
+  nivel       String    @db.VarChar(50)
+  descricao   String?   @db.VarChar(200)
+  deleted_at  DateTime?
+  farmacia_id Int
+  farmacia    farmacia  @relation(fields: [farmacia_id], references: [id])
+
   medicamentos medicamentos[]
 }
 
@@ -45,11 +54,13 @@ model medicamentos {
   categoria_id   Int
   localizacao_id Int
   taxa_iva_id    Int
+  farmacia_id    Int
 
   // Relações
   categoria   categorias   @relation(fields: [categoria_id], references: [id])
   localizacao localizacoes @relation(fields: [localizacao_id], references: [id])
   taxas_ivas  taxas_iva    @relation(fields: [taxa_iva_id], references: [id])
+  farmacia    farmacia     @relation(fields: [farmacia_id], references: [id])
 
   barcodes    barcodes[]
   lotes       lotes[]
@@ -59,22 +70,33 @@ model medicamentos {
 model barcodes {
   id             Int       @id @default(autoincrement())
   medicamento_id Int
-  codigo         String    @unique
+  codigo         String
   deleted_at     DateTime?
+  farmacia_id    Int
 
   // Relações
   medicamentos medicamentos @relation(fields: [medicamento_id], references: [id])
+  farmacia     farmacia     @relation(fields: [farmacia_id], references: [id])
+
+  //restrição de unicidade composta
+  @@unique([farmacia_id, codigo])
 }
 
 model fornecedores {
   id           Int       @id @default(autoincrement())
   nome_empresa String    @db.VarChar(150)
-  nif          String    @unique @db.VarChar(20)
+  nif          String    @db.VarChar(20)
   contacto     String    @db.VarChar(50)
   endereco     String    @db.VarChar(200)
   created_at   DateTime  @default(now())
   deleted_at   DateTime?
-  lotes        lotes[]
+  farmacia_id  Int
+  farmacia     farmacia  @relation(fields: [farmacia_id], references: [id])
+
+  lotes lotes[]
+
+  //restrição de unicidade composta
+  @@unique([farmacia_id, nif])
 }
 
 model lotes {
@@ -122,7 +144,7 @@ enum StatusConta {
 model utilizadores {
   id            Int         @id @default(autoincrement())
   nome          String      @db.VarChar(100)
-  username      String      @unique @db.VarChar(50)
+  username      String      @db.VarChar(50)
   password_hash String      @db.VarChar(255)
   role          Role        @default(OPERADOR)
   status        StatusConta @default(PENDENTE)
@@ -134,10 +156,12 @@ model utilizadores {
   approved_by   Int? //chave estrngeira referenciando a mesma tabela
   rejected_by   Int?
   deleted_by    Int?
+  farmacia_id   Int?
 
   approvedBy utilizadores? @relation("AdminAprovacao", fields: [approved_by], references: [id])
   rejectedBy utilizadores? @relation("AdminReprovacao", fields: [rejected_by], references: [id])
   deletedBy  utilizadores? @relation("AdminDelete", fields: [deleted_by], references: [id])
+  farmacia   farmacia?     @relation(fields: [farmacia_id], references: [id])
 
   approvedUsers utilizadores[] @relation("AdminAprovacao")
   rejectedUsers utilizadores[] @relation("AdminReprovacao")
@@ -149,7 +173,9 @@ model utilizadores {
   planos_licenca    planos_licenca[]
   pagamento_licenca pagamento_licenca[]
   codigos_ativacao  codigos_ativacao[]
-  farmacia          farmacia[]
+
+  //restrição de unicidade composta
+  @@unique([farmacia_id, username])
 }
 
 enum Status {
@@ -172,10 +198,12 @@ model vendas {
   status         Status    @default(DRAFT)
   created_at     DateTime  @default(now())
   updated_at     DateTime?
+  farmacia_id    Int
 
   //Relações
   utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
   cliente    clientes     @relation(fields: [cliente_id], references: [id])
+  farmacia   farmacia     @relation(fields: [farmacia_id], references: [id])
 
   itens_venda   itens_venda[]
   pagamentos    pagamentos[]
@@ -252,6 +280,7 @@ model logs_auditoria {
 
   //Foreign Keys
   utilizador_id Int
+  farmacia_id   Int?
 
   acao         Acao     @default(UPDATE)
   tabela       String
@@ -262,32 +291,50 @@ model logs_auditoria {
 
   //Relações
   utilizador utilizadores @relation(fields: [utilizador_id], references: [id])
+  farmacia   farmacia?    @relation(fields: [farmacia_id], references: [id])
 }
 
 model farmacia {
-  id                          Int          @id @default(autoincrement())
-  nif                         String       @unique @db.VarChar(20)
+  id                          Int    @id @default(autoincrement())
+  nif                         String @unique @db.VarChar(20)
   razao_social                String
-  nome_comercial              String       @db.VarChar(100)
-  provincia                   String       @default("Luanda")
-  morada                      String       @db.VarChar(100)
-  telefone                    String       @db.VarChar(100)
+  nome_comercial              String @db.VarChar(100)
+  provincia                   String @default("Luanda")
+  morada                      String @db.VarChar(100)
+  telefone                    String @db.VarChar(100)
   numero_certificado_software String
-  utilizador_id               Int
-  utilizador                  utilizadores @relation(fields: [utilizador_id], references: [id])
 
   //dados para licenciamento da farmacia
   tenant_id_fk Int     @unique
   tenant       tenants @relation(fields: [tenant_id_fk], references: [id])
+
+  categorias     categorias[]
+  localizacoes   localizacoes[]
+  fornecedores   fornecedores[]
+  medicamentos   medicamentos[]
+  utilizadores   utilizadores[]
+  clientes       clientes[]
+  vendas         vendas[]
+  logs_auditoria logs_auditoria[]
+  notas_credito  notas_credito[]
+  fatura         fatura[]
+  barcodes       barcodes[]
 }
 
 model clientes {
-  id        Int      @id @default(autoincrement())
-  nif       String   @unique @db.VarChar(20)
-  nome      String   @db.VarChar(200)
-  endereco  String?
-  provincia String   @default("Luanda")
-  vendas    vendas[]
+  id          Int     @id @default(autoincrement())
+  nif         String  @db.VarChar(20)
+  nome        String  @db.VarChar(200)
+  endereco    String?
+  provincia   String  @default("Luanda")
+  farmacia_id Int
+
+  farmacia farmacia @relation(fields: [farmacia_id], references: [id])
+
+  vendas vendas[]
+
+  //restrição de unicidade composta
+  @@unique([farmacia_id, nif])
 }
 
 model taxas_iva {
@@ -316,29 +363,38 @@ model notas_credito {
   motivo            motivo_nota_credito @default(ERRO_FATURACAO)
   valor_anulado     Decimal             @db.Decimal(15, 2)
   numero_sequencial Int
-  codigo_nota       String              @unique
+  codigo_nota       String
   data_emissao      DateTime            @default(now())
   hash_assinatura   String
   hash_anterior     String?
+  farmacia_id       Int
 
-  venda vendas @relation(fields: [venda_id], references: [id])
+  venda    vendas   @relation(fields: [venda_id], references: [id])
+  farmacia farmacia @relation(fields: [farmacia_id], references: [id])
+
+  //restrição de unicidade composta
+  @@unique([codigo_nota, farmacia_id])
 }
 
 model fatura {
   id            Int    @id @default(autoincrement())
-  codigo_fatura String @unique
+  codigo_fatura String
   serie         String
   ano           Int
   sequencial    Int
+  farmacia_id   Int
 
-  venda_id Int    @unique
-  venda    vendas @relation(fields: [venda_id], references: [id])
+  venda_id Int      @unique
+  venda    vendas   @relation(fields: [venda_id], references: [id])
+  farmacia farmacia @relation(fields: [farmacia_id], references: [id])
 
   hash_assinatura String?
   hash_anterior   String?
   created_at      DateTime @default(now())
 
+  //restrição de unicidade composta
   @@unique([serie, ano, sequencial])
+  @@unique([farmacia_id, codigo_fatura])
 }
 
 //PARTE DO LICENCIAMENTO 
