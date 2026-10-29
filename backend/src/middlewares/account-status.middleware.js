@@ -1,12 +1,14 @@
 import prisma from "../../prisma/prisma.js"
 
-export const verificarStatusConta = async (req, res, next) => {
+export const verificarStatusConta = async (req, res, next) =>
+{
 
     try {
 
         const username = req.body.username
+        const farmacia_id = parseInt(req.farmacia.id)
 
-        if(username === undefined ) return res.status(400).json({message: "Informe os dados para a autenticação."})
+        if (username === undefined) return res.status(400).json({ message: "Informe os dados para a autenticação." })
 
         if (!username) {
             return res.status(400).json({ message: "campo obrigatório" })
@@ -16,14 +18,20 @@ export const verificarStatusConta = async (req, res, next) => {
             return res.status(400).json({ message: "Campo obrigatório!" })
         }
 
+        if (!farmacia_id) {
+            return res.status(400).json({ message: "farmacia id obrigatório!" })
+        }
+
+        console.log("username ",username)
         const verificarUtilizador = await prisma.utilizadores.findUnique({
             where: {
-                username: username,
+                farmacia_id_username: { farmacia_id, username },
                 deleted_at: null
             },
-            select:{
+            select: {
                 id: true,
-                status: true
+                status: true,
+                farmacia: true
             }
         })
 
@@ -31,6 +39,11 @@ export const verificarStatusConta = async (req, res, next) => {
         if (!verificarUtilizador) {
             console.log("o user não encontrado")
             return res.status(404).json({ message: "usuário não encontrado!" })
+        }
+
+        if (verificarUtilizador.farmacia.id !== farmacia_id) {
+            console.log("a farmaacia que esse user esta conectado é diferente da que vem do token")
+            return res.status(409).json({ message: "Id da farmãcia não corresponde." })
         }
 
         //verificar o status do user
@@ -55,7 +68,7 @@ export const verificarStatusConta = async (req, res, next) => {
         }
 
     } catch (error) {
-        console.log(error.message)
+        console.log(error)
         return res.status(500).json({ error: error.message })
     }
 }

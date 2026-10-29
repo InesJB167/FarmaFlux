@@ -1,9 +1,9 @@
 import prisma from "../../../../prisma/prisma.js"
 
-export const buscarCategoriaPorNome = async (nomeCategoria) => {
+export const buscarCategoriaPorNome = async (farmacia_id,nomeCategoria) => {
     return await prisma.categorias.findUnique({
         where: {
-            nome: nomeCategoria
+            farmacia_id_nome: {farmacia_id, nomeCategoria}
         }
     })
 

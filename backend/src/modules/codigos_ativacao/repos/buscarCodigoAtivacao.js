@@ -12,7 +12,8 @@ export const buscarCodigoAtivacao = async(codigoAtivacao)=>{
                         select:{
                             id: true
                         }
-                    }
+                    },
+                    farmacia: true
                 }
             }
         }

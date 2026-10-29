@@ -30,6 +30,12 @@
             message: "Acesso negado: tenant inativo."
         }
 
+        if(!codigoAtivacao.tenant.farmacia) return {
+            success: false,
+            status: 404,
+            message: "Este tenant não possui uma farmácia associada a ele."
+        }
+
         const limiteDispositivos = codigoAtivacao.tenant.limite_dispositivos
         const dispositivosConectados = codigoAtivacao.tenant.dispositivos
 
@@ -55,7 +61,7 @@
         {
             const payload = {
                 tenant_id: codigoAtivacao.tenant_id_fk,
-                type: "dipositivo",
+                type: "dispositivo",
                 id: dispositivo.id
             }
             const secret = process.env.JWT_SECRET

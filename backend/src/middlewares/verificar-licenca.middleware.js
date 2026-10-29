@@ -6,6 +6,9 @@ import { buscarDispositivoPorId } from "../modules/dispositivos/repos/buscarDisp
 export const verificarSubscricaoLicensa = async (req, res, next) =>
 {
     try {
+        /**
+         * ?este middleware verifica se a subscrição da licença ainda é válida, porém ela vai precisar do token gerado pelo dispositivo depois da sua ativação, o mesmo deve ser guardado localmente no dispositivo e na base de dados.
+         */
         const autorizacao = req.headers["x-device-token"]
         if (!autorizacao) return res.status(400).json({ message: "Requisição sem a devida autorização." })
 
@@ -46,17 +49,26 @@ export const verificarSubscricaoLicensa = async (req, res, next) =>
         })
 
         res.set("x-subscricao-valida-ate", tenant.data_proximo_pagamento.toISOString())
-        req.device = decodificar
+        localStorage.setItem("x-subscricao-valida-ate", tenant.data_proximo_pagamento.toISOString())
+        res.set("x-device-token", tokenDispositivo)
 
+        //?guardando o id da farmacia vai ser muito necessário
+        req.farmacia = tenant.farmacia
+        /**
+         * !criei essa funçao para verificar a subscriçao da licença aantes do login
+         */
+        console.log("pass")
         next()
 
     } catch (error) {
-        if (
-            error instanceof jwt.TokenExpiredError ||
-            error instanceof jwt.JsonWebTokenError
-        ) {
+        if ( error instanceof jwt.TokenExpiredError) {
             return res.status(401).json({
-                message: "Token inválido ou expirado."
+                message: "Token expirado."
+            })
+        } else if( error instanceof jwt.JsonWebTokenError ) {
+            console.log("token invalido na verificaçao de licença")
+            return res.status(401).json({
+                message: "Token inválido."
             })
         }
 
