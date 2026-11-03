@@ -1,11 +1,37 @@
 import prisma from "../../../prisma/prisma.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import {buscarDispositivoPorId} from "../dispositivos/repos/buscarDispositivoPorId.js"
+import {buscarTenantPorId} from "../tenants/repository/buscarTenantPorId.js"
+import {buscarFarmaciaPorId} from "../farmacia/repository/buscarFarmaciaPorId.js"
 
-export const entrar = async (farmacia_id,username, senha) =>
+export const entrar = async (idDispositivo,username, senha) =>
 {
     try {
-        
+        const dispositivo = await buscarDispositivoPorId(idDispositivo)
+        if(!dispositivo) return {
+            success: false,
+            status: 404,
+            message: "Dispositivo não encontrado."
+        }
+
+        const tenant = await buscarTenantPorId(dispositivo.tenant_id_fk)
+        if(!tenant) return {
+            success: false,
+            status: 404,
+            message: "Tenant do dispositivo não encontrado."
+        }
+
+        const farmacia = await buscarFarmaciaPorId(tenant.farmacia.id)
+        if(!tenant.farmacia || !farmacia) return {
+            success: false,
+            status: 404,
+            message: "Farmácia não encontrada."
+        }
+
+        const farmacia_id = farmacia.id
+
+        //?para o login de usuário é necessario uma busca composta para achar o user relacionado a farmácia correspondente.
         const verficar_user = await prisma.utilizadores.findUnique({
             where: {
                 farmacia_id_username: {farmacia_id,username},
@@ -40,7 +66,8 @@ export const entrar = async (farmacia_id,username, senha) =>
             id: verficar_user.id,
             username: verficar_user.username,
             role: verficar_user.role,
-            status: verficar_user.status//mudei algo aqui ...de ativo pra o novo atributo status
+            status: verficar_user.status,//mudei algo aqui ...de ativo pra o novo atributo status
+            farmacia_id: verficar_user.farmacia_id
         }
 
 
@@ -55,7 +82,7 @@ export const entrar = async (farmacia_id,username, senha) =>
         return {
             success: true,
             message: "Login efetuado com sucesso!",
-            token
+            data: token
         }
 
     } catch (error) {
