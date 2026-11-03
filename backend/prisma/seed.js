@@ -111,6 +111,79 @@ async function main()
         }
     })
 
+    //-------------Planos licença -------
+    await prisma.planos_licenca.upsert({
+        where:{
+            codigo: "LCM"
+        },
+        update:{
+            codigo: "LCM",
+            tipo: "MENSAL",
+            custo: 10.000,
+            duracao_dias: 30,
+        },
+        create:{
+            codigo: "LCM",
+            tipo: "MENSAL",
+            custo: 10.000,
+            duracao_dias: 30,
+        }
+    })
+
+    await prisma.planos_licenca.upsert({
+        where:{
+            codigo: "LCT"
+        },
+        update:{
+            codigo: "LCT",
+            tipo: "TRIMESTRAL",
+            custo: 30.000,
+            duracao_dias: 90
+        },
+        create:{
+            codigo: "LCT",
+            tipo: "TRIMESTRAL",
+            custo: 30.000,
+            duracao_dias: 90
+        }
+    })
+
+    await prisma.planos_licenca.upsert({
+        where:{
+            codigo: "LCS"
+        },
+        update:{
+            codigo: "LCS",
+            tipo: "SEMESTRAL",
+            custo: 60.000,
+            duracao_dias: 180
+        },
+        create:{
+            codigo: "LCS",
+            tipo: "SEMESTRAL",
+            custo: 60.000,
+            duracao_dias: 180
+        }
+    })
+
+    await prisma.planos_licenca.upsert({
+        where:{
+            codigo: "LCA"
+        },
+        update:{
+            codigo: "LCA",
+            tipo: "ANUAL",
+            custo: 120.000,
+            duracao_dias: 365
+        },
+        create:{
+            codigo: "LCA",
+            tipo: "ANUAL",
+            custo: 120.000,
+            duracao_dias: 365
+        }
+    })
+
 
     console.log("Seed executado com sucesso!");
     console.log(`Admin ${user.username} criado/atualizado com sucesso! /n Super User ${superUser.username} criado/atualizado .`)

@@ -467,8 +467,8 @@ model planos_licenca {
   tipo          tipo_periodo_licenca
   custo         Decimal              @db.Decimal(10, 2)
   duracao_dias  Int //ex.:  30, 90, 180, 365
-  utilizador_id Int
-  utilizador    utilizadores         @relation(fields: [utilizador_id], references: [id])
+  utilizador_id Int?
+  utilizador    utilizadores?         @relation(fields: [utilizador_id], references: [id])
   pagamentos    pagamento_licenca[]
 }
 
