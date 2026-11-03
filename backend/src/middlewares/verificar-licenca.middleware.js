@@ -29,7 +29,7 @@ export const verificarSubscricaoLicensa = async (req, res, next) =>
 
         const tenant = await buscarTenantPorId(decodificar.tenant_id)
         if (!tenant) return res.status(404).json({ message: "Tenant não encontrado." })
-
+            
         if (tenant.estado !== "ATIVO" || !tenant.data_proximo_pagamento || tenant.data_proximo_pagamento < new Date()) return res.status(402).json({ message: "Licensa expirada." })
 
         const dispositivo = await buscarDispositivoPorId(decodificar.id)
@@ -49,8 +49,6 @@ export const verificarSubscricaoLicensa = async (req, res, next) =>
         })
 
         res.set("x-subscricao-valida-ate", tenant.data_proximo_pagamento.toISOString())
-        localStorage.setItem("x-subscricao-valida-ate", tenant.data_proximo_pagamento.toISOString())
-        res.set("x-device-token", tokenDispositivo)
 
         //?guardando o id da farmacia vai ser muito necessário
         req.farmacia = tenant.farmacia

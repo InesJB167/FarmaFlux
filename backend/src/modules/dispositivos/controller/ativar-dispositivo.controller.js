@@ -14,6 +14,11 @@ export const ativarDispositivo = async(req,res)=>{
         if(!fingerPrint) return res.status(400).json({message: "Fingerprint inválido."})
 
         const ativando = await ativarDispositivoService(codigoAtivacao, deviceId, fingerPrint)
+        if(ativando) {
+            req.farmacia = {
+                token: ativando.data.atualizarDispositivo.token_jwt
+            }
+        }
         return res.status(ativando.status).json(ativando)
         
     } catch (error) {

@@ -15,8 +15,9 @@ import arquivoSaftRoutes from "./src/modules/faturacao/saft/router/arquivoSaft.r
 import tenantsRoutes from "./src/modules/tenants/router/tenants.route.js"
 import planoLicencaRoutes from "./src/modules/planos_licenca/router/plano-licenca.route.js"
 import dispositivosRoutes from "./src/modules/dispositivos/routes/dispositivos.route.js"
+import farmaciaRoutes from "./src/modules/farmacia/routes/farmacia.route.js"
 
-//!"Primeiro fazemos funcionar. Depois fazemos funcionar direito. Só depois fazemos bonito."
+//!"PRIMEIRO FAZEMOS FUNCIONAR. DEPOIS FAZEMOS FUNCIONAR DIREITO. SÓ DEPOIS FAZEMOS FUNCIONAR BONITO."
 
 const app = express()
 
@@ -61,6 +62,8 @@ app.use("/faturacao/saft" ,arquivoSaftRoutes)
 
 //ROTAS DE LICENCIAMENTO DO APP
 app.use("/tenants/", tenantsRoutes)
+
+app.use("/farmacia" ,farmaciaRoutes)
 
 app.use("/plano-licenca", planoLicencaRoutes)
 

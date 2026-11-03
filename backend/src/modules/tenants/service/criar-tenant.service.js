@@ -105,8 +105,8 @@ export const criarTenantService = async (idUser, dadosTenant, dadosPagamento) =>
     })
 
     return {
-        success: false,
-        status: 409,
+        success: true,
+        status: 201,
         message: "Tenant criado com sucesso.",
         data: registrarTenant
     }

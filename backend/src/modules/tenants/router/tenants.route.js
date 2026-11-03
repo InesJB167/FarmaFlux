@@ -6,12 +6,13 @@ import { registrarPagamento } from "../../pagamento_licenca/controller/registrar
 import { gerarCodigoAtivacao } from "../../codigos_ativacao/controller/gerar-codigo-ativacao.controller.js";
 import { estenderSubscricao } from "../controller/estenderSubscricaoTenant.controller.js";
 import { suspenderTenant } from "../controller/suspender-tenant.controller.js";
-import { registrarFarmacia } from "../../farmacia/controller/registrar-farmacia.controller.js";
+import { registrarFarmacia } from "../../tenants/controller/registrar-farmacia-pelo-tenant.controller.js";
 import { verificarUtilizadorAtivo } from "../../../middlewares/check-active-user.middleware.js";
 const route = express.Router()
 
 route.post("/", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), criarTenant)
 route.post("/:id/farmacia/", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), registrarFarmacia)
+
 route.post("/:id/codigo-ativacao/", autenticar, verificarUtilizadorAtivo ,authorization(["SUPER_ADMIN"]), gerarCodigoAtivacao)
 
 route.post("/:id/pagamento", autenticar,verificarUtilizadorAtivo, authorization(["SUPER_ADMIN"]), registrarPagamento)
