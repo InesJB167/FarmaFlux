@@ -1,9 +1,9 @@
 import prisma from "../../../../prisma/prisma.js";
 
-export const buscarBarcodePorCodigo = async (codigo) => {
-    return await prisma.barcodes.findFirst({
+export const buscarBarcodePorCodigo = async (farmacia_id,codigo) => {
+    return await prisma.barcodes.findUnique({
         where: {
-            codigo,
+            farmacia_id_codigo:{farmacia_id,codigo},
             deleted_at: null
         },
         select: {

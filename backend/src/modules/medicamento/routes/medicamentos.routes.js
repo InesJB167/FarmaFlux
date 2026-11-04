@@ -11,10 +11,14 @@ import { authorization } from "../../../middlewares/authorize.middleware.js"
 const router = express.Router()
 
 router.post("/" ,autenticar, verificarUtilizadorAtivo, registrarMedicamento)
-router.get("/" ,autenticar, verificarUtilizadorAtivo, listarMedicamentos)
+
 router.get("/search" ,autenticar, verificarUtilizadorAtivo, pesquisandoMedicamentos)
 router.get("/:id" ,autenticar, verificarUtilizadorAtivo, buscarMedicamentoPorId)
+
+router.get("/" ,autenticar, verificarUtilizadorAtivo, listarMedicamentos)
+
 router.patch("/:id" ,autenticar , verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]), atualizarMedicamento)
 router.delete("/:id" ,autenticar, verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]), deletarMedicamento)
+
 
 export default router

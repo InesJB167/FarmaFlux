@@ -1,9 +1,11 @@
 import { validarId } from "../../../utils/validar-id.js"
 import { registrarBarcodeService } from "../service/registrar-barcode.service.js"
 import { validarBarcode } from "../repository/validarBarcode.js"
+import {buscarDadosFarmacia} from "../../../utils/buscarDadosFarmacia.js"
 
 export const registrarBarcode = async (req, res) => {
     try {
+        const farmaciaId = buscarDadosFarmacia(req,res)
         const codigo = req.body.codigo?.trim()
         const medicamento_id = Number(req.body.medicamento_id)
         const verificarId = validarId(medicamento_id)
@@ -38,7 +40,7 @@ export const registrarBarcode = async (req, res) => {
             return res.status(400).json({message:"EAN-13 inválido"})        
        }
 
-        const registrarBarcode = await registrarBarcodeService(codigo, medicamento_id)
+        const registrarBarcode = await registrarBarcodeService(farmaciaId,codigo, medicamento_id)
 
         if (!registrarBarcode.success) return res.status(registrarBarcode.status).json(registrarBarcode)
 

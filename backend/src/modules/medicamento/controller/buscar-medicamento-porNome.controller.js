@@ -1,13 +1,15 @@
+import { buscarDadosFarmacia } from "../../../utils/buscarDadosFarmacia.js"
 import { buscarMedicamentoPorNomeService } from "../service/buscar-medicamento-porNome.service.js"
 
 export const buscarMedicamentoPorNome = async (req, res) =>{
     try {
+        const farmaciaId = buscarDadosFarmacia(req,res)
         const nome = req.query.nome?.trim()
         console.log(req.query)
 
         if(!nome) return res.status(400).json({message: "Informe o nome do medicamento."})
 
-        const buscarMedicamento = await buscarMedicamentoPorNomeService(nome)
+        const buscarMedicamento = await buscarMedicamentoPorNomeService(farmaciaId,nome)
 
         if(!buscarMedicamento.success) return res.status(buscarMedicamento.status).json(buscarMedicamento)
 

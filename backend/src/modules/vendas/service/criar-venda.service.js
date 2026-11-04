@@ -2,10 +2,20 @@ import prisma from "../../../../prisma/prisma.js"
 import { buscarClientePorNif } from "../../clientes/repository/buscarClientePorNif.js"
 import { registrarCliente } from "../../clientes/repository/registrarCliente.js"
 import { buscarUtilizadorPorId } from "../../utilizador/repository/buscarUserPorId.js"
+import {buscarFarmaciaPorId} from "../../farmacia/repository/buscarFarmaciaPorId.js"
 
-export const criarVendaService = async (idUser, totalBruto, totalDesconto, dadosConsumidor) =>
+export const criarVendaService = async (farmaciaId,idUser, totalBruto, totalDesconto, dadosConsumidor) =>
 {
-    const encontrarUser = await buscarUtilizadorPorId(idUser)
+    const farmacia = await buscarFarmaciaPorId(farmaciaId)
+    if(!farmacia)return {
+        success: false,
+        status: 404,
+        message: "Farmácia não encontrada."
+    }
+
+    const farmacia_id= parseInt(farmacia.id)
+
+    const encontrarUser = await buscarUtilizadorPorId(farmacia_id,idUser)
     if (!encontrarUser) return {
         success: false,
         status: 404,
@@ -15,20 +25,21 @@ export const criarVendaService = async (idUser, totalBruto, totalDesconto, dados
     let dadosCliente
     if (dadosConsumidor) {
         const nifEnviado = dadosConsumidor.nif
-        const nifClienteExistente = await buscarClientePorNif(nifEnviado)
+        const nifClienteExistente = await buscarClientePorNif(farmacia_id,nifEnviado)
         if (!nifClienteExistente) {
-            const novoCliente = await registrarCliente(dadosConsumidor)
+            const novoCliente = await registrarCliente(farmacia_id,dadosConsumidor)
             dadosCliente = {
                 id: novoCliente.id
             }
         } 
+        
         dadosCliente = {
             id: nifClienteExistente.id
         }
 
     } else {
         const nifParaConsumidorFinal = "999999999"
-        const consumidorFinal = await buscarClientePorNif(nifParaConsumidorFinal)
+        const consumidorFinal = await buscarClientePorNif(farmacia_id,nifParaConsumidorFinal)
         dadosCliente = {
             ...consumidorFinal
         }
@@ -47,7 +58,12 @@ export const criarVendaService = async (idUser, totalBruto, totalDesconto, dados
                 }
             },
             total_bruto: totalBruto,
-            total_desconto: totalDesconto
+            total_desconto: totalDesconto,
+            farmacia:{
+                connect:{
+                    id: farmacia_id
+                }
+            }
         }
     })
 

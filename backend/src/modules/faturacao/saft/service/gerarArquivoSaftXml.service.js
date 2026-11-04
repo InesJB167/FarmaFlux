@@ -1,8 +1,8 @@
 import { create } from "xmlbuilder2"
 import { gerarArquivoSaftService } from "../service/gerarArquivoSaft.service.js"
 
-export const gerarArquivoSaftXml = async (dataInicio, dataFim) => {
-    const dadosSaft = await gerarArquivoSaftService(dataInicio, dataFim)
+export const gerarArquivoSaftXml = async (dataInicio, dataFim,farmacia_id) => {
+    const dadosSaft = await gerarArquivoSaftService(dataInicio, dataFim,farmacia_id)
 
     if (!dadosSaft.success && dadosSaft.success !== undefined) {
         return dadosSaft

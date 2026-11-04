@@ -3,6 +3,7 @@ import { atualizarMedicamentoService } from "../service/atualizar-medicamento.se
 
 export const atualizarMedicamento = async (req, res) => {
     try {
+        
         const utilizadorId = req.user.id
         const id = Number(req.params.id) 
         const nome = req.body.nome?.trim()

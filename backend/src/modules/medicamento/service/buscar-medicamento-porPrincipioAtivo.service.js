@@ -1,10 +1,21 @@
 import { bsucarMedicamentosPorPrincipioAtivo } from "../repository/buscarMedicamentoPorPrincipioAtivo.js"
+import { buscarFarmaciaPorId } from "../../farmacia/repository/buscarFarmaciaPorId.js"
 
-export const bsucarMedicamentosPorPrincipioAtivoService = async (principio_ativo) =>{
+export const bsucarMedicamentosPorPrincipioAtivoService = async (farmaciaId, principio_ativo) =>
+{
 
-    const buscarMedicamento = await bsucarMedicamentosPorPrincipioAtivo(principio_ativo)
+    const farmacia = await buscarFarmaciaPorId(farmaciaId)
+    if (!farmacia) return {
+        success: false,
+        status: 404,
+        message: "Farmácia não encontrada."
+    }
 
-    if(buscarMedicamento.length === 0) {
+    const farmacia_id = parseInt(farmacia.id)
+
+    const buscarMedicamento = await bsucarMedicamentosPorPrincipioAtivo(farmacia_id, principio_ativo)
+
+    if (buscarMedicamento.length === 0) {
         return {
             success: false,
             status: 404,

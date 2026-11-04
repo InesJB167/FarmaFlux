@@ -1,9 +1,10 @@
 import prisma from "../../../../prisma/prisma.js"
 
-export const listarCategoriaService = async ()=>{
+export const listarCategoriaService = async (farmaciaId)=>{
 
     const categorias = await prisma.categorias.findMany({
         where:{
+            farmacia_id: farmaciaId,
             deleted_at: null
         },
         orderBy:{

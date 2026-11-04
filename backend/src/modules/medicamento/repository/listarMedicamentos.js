@@ -1,9 +1,10 @@
 import prisma from "../../../../prisma/prisma.js"
 
-export const listarMedicamentos = async () =>{
+export const listarMedicamentos = async (farmacia_id) =>{
 
     return await prisma.medicamentos.findMany({
         where:{
+            farmacia_id,
             deleted_at: null
         },
         include:{

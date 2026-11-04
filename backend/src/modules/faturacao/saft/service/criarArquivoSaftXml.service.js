@@ -2,9 +2,9 @@ import fs from "fs"
 import { gerarArquivoSaftXml } from "./gerarArquivoSaftXml.service.js"
 import { validarArquivoSaft } from "../repository/validarArquivoSaft.js"
 
-export const criarArquivoSaftXml = async(dataInicio,dataFim)=>{
+export const criarArquivoSaftXml = async(dataInicio,dataFim,farmacia_id)=>{
     //essa funçao que salva o arquivo em memoria
-    const xmlString = await gerarArquivoSaftXml(dataInicio,dataFim)
+    const xmlString = await gerarArquivoSaftXml(dataInicio,dataFim,farmacia_id)
     const arquivoValido = await validarArquivoSaft(xmlString)
 
     if(!arquivoValido){

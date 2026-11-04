@@ -1,7 +1,10 @@
 import prisma from "../../../../prisma/prisma.js";
 
-export const listarTodasVendas = async()=>{
+export const listarTodasVendas = async(farmacia_id)=>{
     return await prisma.vendas.findMany({
+        where:{
+            farmacia_id
+        },
         select:{
             id: true,
             utilizador:{

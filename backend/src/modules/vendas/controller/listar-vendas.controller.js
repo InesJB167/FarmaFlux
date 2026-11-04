@@ -1,8 +1,10 @@
 import {listarVendasService} from "../service/listar-vendas.service.js"
+import {buscarDadosFarmacia} from "../../../utils/buscarDadosFarmacia.js"
 
 export const listarTodasVendas = async(req,res)=>{
     try {
-        const vendasRegistrdas = await listarVendasService()
+        const farmaciaId = buscarDadosFarmacia(req,res)
+        const vendasRegistrdas = await listarVendasService(farmaciaId)
         return res.status(vendasRegistrdas.status).json(vendasRegistrdas)
 
     } catch (error) {

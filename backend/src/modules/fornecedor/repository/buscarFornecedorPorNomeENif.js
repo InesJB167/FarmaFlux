@@ -1,8 +1,9 @@
 import prisma from "../../../../prisma/prisma.js";
 
-export const buscarFornecedorPorNomeENif = async (nome_empresa,nif) =>{
+export const buscarFornecedorPorNomeENif = async (farmacia_id,nome_empresa,nif) =>{
     return await prisma.fornecedores.findFirst({
         where:{
+            farmacia_id,
             nome_empresa,
             nif,
             deleted_at : null

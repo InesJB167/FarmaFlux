@@ -1,10 +1,19 @@
 import prisma from "../../../../prisma/prisma.js";
 import { buscarMedicamentoPorId } from "../../medicamento/repository/buscarMedicamentoPorId.js";
 import { buscarBarcodePorCodigo } from "../repository/buscarBarcodePorCodigo.js"
+import {buscarFarmaciaPorId} from "../../farmacia/repository/buscarFarmaciaPorId.js"
 
-export const registrarBarcodeService = async (codigo, medicamento_id) => {
+export const registrarBarcodeService = async (farmaciaId,codigo, medicamento_id) => {
+    const farmacia = await buscarFarmaciaPorId(farmaciaId)
+    if(!farmacia) return {
+        success: false,
+        status: 404,
+        message: "Farmácia não encontrada."
+    }
+    const farmacia_id = parseInt(farmacia.id)
+
     const encontrarMedicamento = await buscarMedicamentoPorId(medicamento_id)
-    const encontrarBarcode = await buscarBarcodePorCodigo(codigo)
+    const encontrarBarcode = await buscarBarcodePorCodigo(farmacia_id,codigo)
 
     if (!encontrarMedicamento) return {
         success: false,
@@ -21,7 +30,16 @@ export const registrarBarcodeService = async (codigo, medicamento_id) => {
     const criarBarcode = await prisma.barcodes.create({
         data: {
             codigo,
-            medicamento_id
+            medicamentos:{
+                connect:{
+                    id: medicamento_id
+                }
+            },
+            farmacia:{
+                connect:{
+                    id: farmacia_id
+                }
+            }
         },
         select: {
             id: true,

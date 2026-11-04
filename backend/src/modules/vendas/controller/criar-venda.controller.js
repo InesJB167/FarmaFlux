@@ -1,9 +1,11 @@
 import { validarId } from "../../../utils/validar-id.js"
 import { criarVendaService } from "../service/criar-venda.service.js"
+import {buscarDadosFarmacia} from "../../../utils/buscarDadosFarmacia.js"
 
 export const criarVenda = async (req, res) =>
 {
     try {
+        const farmaciaId = buscarDadosFarmacia(req,res)
         const idUser = req.user.id
         console.log(idUser)
 
@@ -24,13 +26,11 @@ export const criarVenda = async (req, res) =>
             dadosCliente = {
                 nome: nomeCliente
             }
-            console.log("1",nomeCliente)
         }
 
         if(req.body.hasOwnProperty('nifCliente')){
             const nifCliente = req.body.nifCliente?.trim()
             dadosCliente.nif = nifCliente
-            console.log("2", nifCliente)
         }
 
         if(req.body.hasOwnProperty('endereco')){
@@ -39,18 +39,20 @@ export const criarVenda = async (req, res) =>
             console.log("3",endereco)
         }
 
-        if(!dadosCliente.nome || !dadosCliente.nif){
-            console.log("Faltam dados do cliente.")
-            return res.status(400).json({message: "Termine de inserir os dados do cliente."})
+        if(dadosCliente.hasOwnProperty('nome') || dadosCliente.hasOwnProperty('nif')){
+            
+            if(!dadosCliente.nome || !dadosCliente.nif){
+                console.log("Faltam dados do cliente.")
+                return res.status(400).json({message: "Termine de inserir os dados do cliente."})
+            }
         }
 
         if(Object.values(dadosCliente).length > 0){
-            console.log("Dados do cliente: ",dadosCliente)
-            iniciandoVenda =  await criarVendaService(idUser, totalBruto, totalDesconto, dadosCliente)
+            iniciandoVenda =  await criarVendaService(farmaciaId,idUser, totalBruto, totalDesconto, dadosCliente)
             return res.status(iniciandoVenda.status).json(iniciandoVenda)
         }
 
-        iniciandoVenda = await criarVendaService(idUser, totalBruto, totalDesconto)
+        iniciandoVenda = await criarVendaService(farmaciaId,idUser, totalBruto, totalDesconto)
         if (!iniciandoVenda.success) return res.status(iniciandoVenda.status).json(iniciandoVenda)
 
         return res.status(iniciandoVenda.status).json(iniciandoVenda)
