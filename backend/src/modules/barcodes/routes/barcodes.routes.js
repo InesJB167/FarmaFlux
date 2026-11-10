@@ -3,6 +3,7 @@ import { autenticar } from "../../../middlewares/auth.middleware.js"
 import { authorization } from "../../../middlewares/authorize.middleware.js"
 import { registrarBarcode } from "../controller/registrar-barcode.controller.js"
 import { verificarUtilizadorAtivo } from "../../../middlewares/check-active-user.middleware.js"
+import { verificarSubscricaoLicensa } from "../../../middlewares/verificar-licenca.middleware.js"
 import { encontrarBarcodePorId } from "../controller/buscar-barcode-porId.controller.js"
 import { listarBarcodesAtivos } from "../controller/listar-barcode.controller.js"
 import { encontrarBarcodePeloCodigo } from "../controller/buscar-barcode-peloCodigo.controller.js"
@@ -10,14 +11,14 @@ import { editarBarcode } from "../controller/editar-barcode.controller.js"
 import { deletarBarcode } from "../controller/deletar-barcode.controller.js"
 const route = express.Router()
 
-route.post("/" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN","GERENTE"]), registrarBarcode)
+route.post("/" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN","GERENTE"]), verificarSubscricaoLicensa, registrarBarcode)
 
 //!todos users podem listar barcodes, e pesquisa-los mas nem todos podem edita-los 
 route.get("/search", autenticar, verificarUtilizadorAtivo ,encontrarBarcodePeloCodigo)
 route.get("/:id", autenticar,verificarUtilizadorAtivo,encontrarBarcodePorId)
 route.get("/", autenticar, verificarUtilizadorAtivo ,listarBarcodesAtivos)
 
-route.patch("/:id", autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]) ,editarBarcode)
-route.delete("/:id", autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]) ,deletarBarcode)
+route.patch("/:id", autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]) ,verificarSubscricaoLicensa, editarBarcode)
+route.delete("/:id", autenticar, verificarUtilizadorAtivo, authorization(["ADMIN","GERENTE"]) ,verificarSubscricaoLicensa, deletarBarcode)
 
 export default route

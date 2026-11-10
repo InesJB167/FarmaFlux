@@ -1,6 +1,6 @@
 import express from "express"
 import { autenticar } from "../../../middlewares/auth.middleware.js"
-import { verificarStatusConta } from "../../../middlewares/account-status.middleware.js"
+import { verificarSubscricaoLicensa } from "../../../middlewares/verificar-licenca.middleware.js"
 import { verificarUtilizadorAtivo } from "../../../middlewares/check-active-user.middleware.js"
 import { authorization } from "../../../middlewares/authorize.middleware.js"
 import { criarUtilizador } from "../controller/criar-utilizador.controller.js"
@@ -25,15 +25,15 @@ router.get("/search" ,autenticar , verificarUtilizadorAtivo, authorization(["ADM
 router.get("/:id" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), buscarUtilizador)
 
 //endpoint que permite apenas o user da propria conta alterar o seu perfil
-router.patch("/" ,autenticar ,verificarUtilizadorAtivo, atualizarUtilizador)
+router.patch("/" ,autenticar ,verificarUtilizadorAtivo, verificarSubscricaoLicensa,atualizarUtilizador)
 
-router.patch("/:id/status" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), alterarStatusUtilizador )
+router.patch("/:id/status" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]),verificarSubscricaoLicensa, alterarStatusUtilizador )
 
-router.patch("/:id/reject" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]) ,rejeitarUtilizador)
+router.patch("/:id/reject" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]) ,verificarSubscricaoLicensa,rejeitarUtilizador)
 
-router.patch("/:id/role" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]), alteralRoleUtilizador)
+router.patch("/:id/role" ,autenticar ,verificarUtilizadorAtivo ,authorization(["ADMIN"]),verificarSubscricaoLicensa, alteralRoleUtilizador)
 
-router.delete("/:id" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), deletarUtilizador)
+router.delete("/:id" ,autenticar ,verificarUtilizadorAtivo, authorization(["ADMIN"]), verificarSubscricaoLicensa,deletarUtilizador)
 
 export default router
 

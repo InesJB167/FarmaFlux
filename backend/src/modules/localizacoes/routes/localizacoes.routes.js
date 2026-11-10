@@ -2,6 +2,7 @@ import express from "express"
 import { autenticar } from "../../../middlewares/auth.middleware.js"
 import { verificarUtilizadorAtivo } from "../../../middlewares/check-active-user.middleware.js"
 import { authorization } from "../../../middlewares/authorize.middleware.js"
+import {verificarSubscricaoLicensa} from "../../../middlewares/verificar-licenca.middleware.js"
 import { criarLocalizacao } from "../controllers/criar-localizacao.controller.js"
 import { listarLocalizacoes } from "../controllers/listar-localizacoes.controller.js"
 import { buscarLocalizacaoPorId } from "../controllers/buscar-localizacaoPorId.controller.js"
@@ -9,10 +10,10 @@ import { alterarLocalizacao } from "../controllers/atualizar-localizacao.control
 import { deletarLocalizacao } from "../controllers/deletar-loclizacao.controller.js"
 const router = express.Router()
 
-router.post("/" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]), criarLocalizacao)
+router.post("/" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]), verificarSubscricaoLicensa,criarLocalizacao)
 router.get("/" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]), listarLocalizacoes)
 router.get("/:id" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]), buscarLocalizacaoPorId)
-router.patch("/:id" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]), alterarLocalizacao)
-router.delete("/:id" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]), deletarLocalizacao)
+router.patch("/:id" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]), verificarSubscricaoLicensa,alterarLocalizacao)
+router.delete("/:id" , autenticar, verificarUtilizadorAtivo , authorization(["ADMIN","GERENTE"]),verificarSubscricaoLicensa, deletarLocalizacao)
 
 export default router

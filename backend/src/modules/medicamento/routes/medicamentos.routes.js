@@ -8,17 +8,18 @@ import { pesquisandoMedicamentos } from "../controller/pesquisar-medicamentoPor.
 import { atualizarMedicamento } from "../controller/atualizar-medicamento.controller.js"
 import { deletarMedicamento } from "../controller/deletar-medicamento.controller.js"
 import { authorization } from "../../../middlewares/authorize.middleware.js"
+import {verificarSubscricaoLicensa} from "../../../middlewares/verificar-licenca.middleware.js"
 const router = express.Router()
 
-router.post("/" ,autenticar, verificarUtilizadorAtivo, registrarMedicamento)
+router.post("/" ,autenticar, verificarUtilizadorAtivo, verificarSubscricaoLicensa,registrarMedicamento)
 
 router.get("/search" ,autenticar, verificarUtilizadorAtivo, pesquisandoMedicamentos)
 router.get("/:id" ,autenticar, verificarUtilizadorAtivo, buscarMedicamentoPorId)
 
 router.get("/" ,autenticar, verificarUtilizadorAtivo, listarMedicamentos)
 
-router.patch("/:id" ,autenticar , verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]), atualizarMedicamento)
-router.delete("/:id" ,autenticar, verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]), deletarMedicamento)
+router.patch("/:id" ,autenticar , verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]),verificarSubscricaoLicensa, atualizarMedicamento)
+router.delete("/:id" ,autenticar, verificarUtilizadorAtivo,authorization(["ADMIN","GERENTE"]),verificarSubscricaoLicensa, deletarMedicamento)
 
 
 export default router
