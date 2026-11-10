@@ -1,9 +1,9 @@
-
+import DashboardLayout from "./layout/dashbordLayout"
 function App() {
 
   return (
     <>
-      <h1>Day one building frontend</h1>
+      <DashboardLayout></DashboardLayout>
     </>
   )
 }
