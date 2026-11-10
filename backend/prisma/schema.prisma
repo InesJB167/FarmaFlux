@@ -453,7 +453,7 @@ model codigos_ativacao {
   codigo        String    @unique @db.VarChar(8)
   tenant_id_fk  Int
   codigo_usado  Boolean   @default(false)
-  expira_em     DateTime?
+  expirado_em     DateTime?
   created_at    DateTime  @default(now())
   utilizador_id Int
 

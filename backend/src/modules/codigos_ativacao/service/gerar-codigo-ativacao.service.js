@@ -25,14 +25,12 @@ export const gerarCodigoAtivacaoService = async(idUser,tenantId)=>{
     const sequencia = randomInt(0,10000)
     const codigoAtivacao = `FJB-${sequencia}`
     const idTenant = tenant.id
-    const data = new Date()
-    const expirando = new Date(data.setMinutes((data.getMinutes()) + 30))
 
     const codigoExiste = await buscarCodigoAtivacao(codigoAtivacao)
     if(codigoExiste) return{
         success: false,
         status: 409,
-        message:"Este codigo ja está sendo usado."
+        message:"Este codigo ja foi gerado."
     }
 
     const registrarCodigo = await prisma.codigos_ativacao.create({
@@ -47,8 +45,7 @@ export const gerarCodigoAtivacaoService = async(idUser,tenantId)=>{
                 connect:{
                     id: idTenant
                 }
-            },
-            expira_em: expirando
+            }
         }
     })
 

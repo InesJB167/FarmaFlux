@@ -18,6 +18,7 @@
             message: "Este codigo ativação ja foi usado."
         }
 
+        //!mudar o atributo expira_em por expirado_em
         if (codigoAtivacao.expira_em && codigoAtivacao.expira_em < new Date()) return {
             success: false,
             status: 403,
@@ -90,7 +91,8 @@
                     id: codigoAtivacao.id
                 },
                 data: {
-                    codigo_usado: true
+                    codigo_usado: true,
+                    expirado_em: new Date()
                 },
                 select: {
                     id: true,
