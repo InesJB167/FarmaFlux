@@ -1,4 +1,5 @@
 import { Hospital } from "lucide-react";
+import {Link} from "react-router-dom";
 
 function SideBar() {
   return (
@@ -19,18 +20,18 @@ function SideBar() {
         className="p-5 flex flex-col gap-5 text-white border-b-2 border-slate-800 h-3/4"
       >
         <p className="text-slate-400 font-thin">Front Office</p>
-        <a href="">Dashboard</a>
-        <a href="">PDV Terminal</a>
+        <Link to="/">Dashboard</Link>
+        <Link to="/pdv-terminal">PDV Terminal</Link>
 
         <p className="text-slate-400 font-thin">Back Office</p>
-        <a href="">Inventário & Lotes</a>
-        <a href=""> Fornecedores</a>
+        <Link to="/dashboard">Inventário & Lotes</Link>
+        <Link to="/dashboard">Fornecedores</Link>
 
         <p className="text-slate-400 font-thin">Financeiro</p>
-        <a href="">Relatórios</a>
+        <Link to="/dashboard">Relatórios</Link>
 
         <p className="text-slate-400 font-thin">Equipa</p>
-        <a href="">Utilizadores e Papéis</a>
+        <Link to="/dashboard">Utilizadores e Papéis</Link>
       </div>
       <div id="user" className="p-5 flex gap-3 text-white">
         <p id="initials" className="bg-slate-700 p-3 rounded-sm text-center text-sm font-bold">

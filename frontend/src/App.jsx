@@ -1,11 +1,11 @@
-import DashboardLayout from "./layout/dashbordLayout"
-function App() {
+import AppRoutes from "./routes/AppRoutes.jsx";
 
+function App() {
   return (
     <>
-      <DashboardLayout></DashboardLayout>
+      <AppRoutes />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

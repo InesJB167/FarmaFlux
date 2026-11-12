@@ -1,7 +1,12 @@
 import { CircleSmall } from "lucide-react";
+import {useLocation} from "react-router-dom";
 
 function NavBar() {
-  const pageName = "Nome da página";
+  const location = useLocation();
+  let pageName = location.pathname.substring(1).replace("/", " ").replace("-", " ").toUpperCase();
+  if (pageName === "") {
+    pageName = "DASHBOARD";
+  }
   const agora = new Date();
   const dia = String(agora.getDate()).padStart(2, "0");
   const mes = agora
