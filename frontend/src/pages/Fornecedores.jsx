@@ -2,6 +2,7 @@
 function Fornecedores() {
   return (
     <div className="flex flex-col gap-2 p-5">
+      <h1 className="font-bold text-xl py-2">Registro de Fornecedores</h1>
       <div className="w-full overflow-x-auto  border border-slate-200 bg-white">
           <div id="head-fornecedores" className="flex items-baseline gap-2 p-5 border-b border-slate-200">
           <p className=" font-medium text-sm">QUADRO DE FORNECEDORES</p>

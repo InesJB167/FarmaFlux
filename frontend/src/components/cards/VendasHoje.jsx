@@ -3,7 +3,7 @@ function VendasHojeCard() {
   const alvoVendas = 20;
 
   return (
-    <div className="w-2xs h-40 p-5 rounded-sm border-2 border-slate-200">
+    <div className="w-full h-40 p-5 rounded-sm border-2 border-slate-200">
       <p className="text-muted text-xs">VENDAS DE HOJE (AOA)</p>
       <p className="font-bold text-3xl">{numeroVendas}</p>
       <div id="progress-container" className="mt-2">

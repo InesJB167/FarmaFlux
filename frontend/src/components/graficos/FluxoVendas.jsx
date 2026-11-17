@@ -19,7 +19,7 @@ function FluxoVendas() {
     { dia: "Dom", vendas: 35000 },
   ]; //dados de exemplo para o gráfico ,aqui vão as vendas da semana
   return (
-    <div className="w-xl border-2 border-gray-200 rounded-2  mt-4" >
+    <div className="w-110 border-2 border-gray-200 rounded-2  mt-4" >
       <h1 className="border-b-2 border-gray-200 p-2">Fluxo de Vendas</h1>
       <div id="grafico" className="w-full h-auto p-5">
         <ResponsiveContainer width="100%" height={250} >
