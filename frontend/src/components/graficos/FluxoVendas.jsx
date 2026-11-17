@@ -21,7 +21,7 @@ function FluxoVendas() {
   return (
     <div className="w-xl border-2 border-gray-200 rounded-2  mt-4" >
       <h1 className="border-b-2 border-gray-200 p-2">Fluxo de Vendas</h1>
-      <div id="grafico" className="w-full h-70 p-5">
+      <div id="grafico" className="w-full h-auto p-5">
         <ResponsiveContainer width="100%" height={250} >
         <AreaChart data={dados}>
           <CartesianGrid strokeDasharray="3 3" />

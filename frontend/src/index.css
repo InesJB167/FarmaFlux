@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+ --animate-page-enter: page-enter 0.3s ease-out;
   /* Cores principais */
   --color-primary: #0F172A;
   --color-secondary: #1E293B;
@@ -16,7 +17,20 @@
   --color-success: #16A34A;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
+
 }
+
+@keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
 @layer base {
   body {

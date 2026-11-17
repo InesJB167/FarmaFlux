@@ -74,7 +74,7 @@ function PDV() {
                 type="text"
                 name="medicamento"
                 id="med"
-                className="border-2 border-primary p-2 rounded-sm w-xl"
+                className="border-2 border-gray-200 p-2 rounded-sm w-xl"
                 placeholder="Pesquisar medicamento por nome ou código de barras..."
               />
               <p className="text-sm">{categorias.length} artigos</p>
@@ -96,42 +96,62 @@ function PDV() {
           <h1 className="p-5 font-bold text-sm border-b-2 border-slate-200">
             CATÁLOGO
           </h1>
-          <div
-            id="header-inventario"
-            className="flex justify-between p-2 text-gray-400 font-medium text-xs border-b-2 border-slate-200"
-          >
-            <p>MEDICAMENTO</p>
-            <p>LOTE/VALIDADE</p>
-            <p>STOCK</p>
-            <p>PREÇOS</p>
-            <p>AÇÃO</p>
-          </div>
-          <div id="medicamento" className="flex flex-col">
-            {medicamentos.map((medicamento) => (
-              <div className="p-3 h-xs border-b-2 border-slate-200 flex justify-between">
-                <p className="font-medium">{medicamento.nome}</p>
-                <div id="lote-validade" className="flex flex-col gap-1">
-                  <p className="font-thin">{medicamento.lote}</p>
-                  <p className="border-2 border-slate-200 text-xs font-bold p-0.5">
-                    {medicamento.validade}
-                  </p>
-                </div>
-                <p className="font-thin">{medicamento.quantidade}</p>
-                <p className="font-thin">
-                  {medicamento.preco.toLocaleString("pt-AO", {
-                    style: "currency",
-                    currency: "AOA",
-                  })}
-                </p>
-                <button className="border-2 border-slate-200 p-1 h-9 font-thin ">
-                  Adicionar
-                </button>
-              </div>
-            ))}
+
+          <div className="w-full overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              {/* Cabeçalho */}
+              <thead className="text-gray-400 font-medium text-xs border-b-2 border-slate-200">
+                <tr>
+                  <th className="p-3">MEDICAMENTO</th>
+                  <th className="p-3">LOTE / VALIDADE</th>
+                  <th className="p-3 text-center">STOCK</th>
+                  <th className="p-3">PREÇOS</th>
+                  <th className="p-3 text-center">AÇÃO</th>
+                </tr>
+              </thead>
+
+              {/* Dados dos medicamentos */}
+              <tbody className="divide-y divide-slate-200">
+                {medicamentos.map((medicamento) => (
+                  <tr key={medicamento.id} className="hover:bg-slate-50">
+                    <td className="p-3 font-medium">{medicamento.nome}</td>
+
+                    <td className="p-3">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-thin">{medicamento.lote}</span>
+                        <span className="border border-slate-200 text-xs font-bold p-1 w-fit">
+                          {medicamento.validade}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="p-3 text-center font-thin">
+                      {medicamento.quantidade}
+                    </td>
+
+                    <td className="p-3 font-thin whitespace-nowrap">
+                      {medicamento.preco.toLocaleString("pt-AO", {
+                        style: "currency",
+                        currency: "AOA",
+                      })}
+                    </td>
+
+                    <td className="p-3 text-center">
+                      <button className="border border-slate-200 rounded-md px-3 py-2 text-sm hover:bg-slate-100">
+                        Adicionar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div id="parte-direita" className="grid grid-rows-[0.01fr_0.1fr_0.60fr_0.1fr] min-h-0 border-2 border-gray-200 w-full col-span-3">
+      <div
+        id="parte-direita"
+        className="grid grid-rows-[0.01fr_0.1fr_0.60fr_0.1fr] min-h-0 border-2 border-gray-200 w-full col-span-3"
+      >
         <div id="header-terminal" className="flex justify-between p-3">
           <p className="font-bold ">Talão em curso</p>
           <p className="bg-primary text-background p-1 rounded-xs font-thin text-xs">
@@ -147,7 +167,8 @@ function PDV() {
           </button>
           <p className="font-thin text-muted text-sm">{mensagem}</p>
         </div>
-        <div id="itens-venda"
+        <div
+          id="itens-venda"
           className="border-t-2 border-b-2 border-gray-200 flex justify-center min-h-0 overflow-auto"
         >
           <p className="font-thin text-muted text-sm">
@@ -159,19 +180,25 @@ function PDV() {
             <p>Subtotal</p>
             <p>0.00 kz</p>
           </div>
-          <div id="iva" className="flex justify-between border-b-2 border-gray-200 pb-1">
+          <div
+            id="iva"
+            className="flex justify-between border-b-2 border-gray-200 pb-1"
+          >
             <p>IVA 14%</p>
             <p>0.00 kz</p>
           </div>
           <div id="total-venda" className="flex justify-between p-2">
-              <h1 className="font-bold text-xl">Total</h1>
-              <p>0.00 kz</p>
+            <h1 className="font-bold text-xl">Total</h1>
+            <p>0.00 kz</p>
           </div>
           <div id="acao-venda" className="flex gap-2">
-            <button className="border-2 border-gray-200 p-2 w-50 rounded-smj">PAUSAR</button>
-            <button className="border-2 border-gray-200 p-2 w-50 bg-primary text-background  rounded-smj">PAGAMENTO</button>
+            <button className="border-2 border-gray-200 p-2 w-50 rounded-smj">
+              PAUSAR
+            </button>
+            <button className="border-2 border-gray-200 p-2 w-50 bg-primary text-background  rounded-smj">
+              PAGAMENTO
+            </button>
           </div>
-
         </div>
       </div>
     </div>

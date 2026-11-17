@@ -24,14 +24,14 @@ function SideBar() {
         <Link to="/pdv-terminal">PDV Terminal</Link>
 
         <p className="text-slate-400 font-thin">Back Office</p>
-        <Link to="/dashboard">Inventário & Lotes</Link>
-        <Link to="/dashboard">Fornecedores</Link>
+        <Link to="/stock">Inventário & Lotes</Link>
+        <Link to="/fornecedores">Fornecedores</Link>
 
         <p className="text-slate-400 font-thin">Financeiro</p>
-        <Link to="/dashboard">Relatórios</Link>
+        <Link to="/relatorios">Relatórios</Link>
 
         <p className="text-slate-400 font-thin">Equipa</p>
-        <Link to="/dashboard">Utilizadores e Papéis</Link>
+        <Link to="/usuarios">Utilizadores e Papéis</Link>
       </div>
       <div id="user" className="p-5 flex gap-3 text-white">
         <p id="initials" className="bg-slate-700 p-3 rounded-sm text-center text-sm font-bold">

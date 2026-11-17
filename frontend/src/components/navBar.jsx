@@ -3,9 +3,21 @@ import {useLocation} from "react-router-dom";
 
 function NavBar() {
   const location = useLocation();
-  let pageName = location.pathname.substring(1).replace("/", " ").replace("-", " ").toUpperCase();
-  if (pageName === "") {
-    pageName = "DASHBOARD";
+  let pageName = location.pathname.substring(1).replace("/", " ").replace("-", " ")
+  switch (pageName){
+    case "": pageName = "Dashboard" 
+    break;
+    case "stock": pageName = "Inventários & Lotes"
+    break;
+    case "usuarios": pageName = "Utilizadores & Papéis"
+    break;
+    case "relatorios": pageName = "Relatórios"
+    break;
+    case "pdv terminal": pageName = "PDV Terminal"
+    break;
+    case "fornecedores": pageName = "Fornecedores"
+    break;
+    default: pageName
   }
   const agora = new Date();
   const dia = String(agora.getDate()).padStart(2, "0");
