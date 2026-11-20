@@ -6,10 +6,12 @@ import Lotes from "../pages/Lotes.jsx";
 import Fornecedores from "../pages/Fornecedores.jsx"
 import Relatorios from "../pages/Relatorios.jsx";
 import Usuarios from "../pages/Usuarios.jsx";
+import Login from "../pages/Login.jsx";
 
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/auth" element={<Login/>}></Route>
       <Route element={<DashboardLayout/>}>
         <Route path="/" element={<Dashboard/>}></Route>
         <Route path="/pdv-terminal" element={<PDV/>}></Route>
